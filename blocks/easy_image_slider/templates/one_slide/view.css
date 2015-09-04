@@ -1,0 +1,106 @@
+.easy-slider-one {
+    transition-property: background-color;
+    /* timing is set by php in view.php with the slideSpeed option */
+}
+
+/* -- Items -- */
+
+.easy-slider-one .owl-item .item 
+ {
+    position: relative;
+    overflow: hidden;
+    transition:.2s;
+    -webkit-transform:scale(.8);
+    transform:scale(.8);
+    opacity: .5;
+
+}
+.easy-slider-one .item.active {
+    position: relative;
+    -webkit-transform:scale(1);
+    transform:scale(1);
+    opacity: 1;
+}
+
+/* -- Image -- */
+
+.easy-slider-one img {
+    display: block;
+    width: 100%;
+    height: auto;    
+    transition: .3s !important;
+    opacity: .5 !important;
+}
+.easy-slider-one .item.active img {
+    opacity: 1 !important;
+}
+.easy-slider-one .item:hover img {
+    -webkit-transform:scale(1.1);
+    transform:scale(1.1);
+    opacity: .8 !important;
+}
+
+/* -- Captions -- */
+
+.easy-slider-one .info-wrap {
+    position: absolute;
+    top:0;bottom: 0; left: 0; right: 0;
+}    
+.easy-slider-one .info {
+    display: table;
+    width: 100%;
+    height: 100%;
+    padding: 10px; 
+}
+.easy-slider-one .info > div {
+    display: table-cell;
+    width: 100%;
+    height: 100%;    
+    vertical-align: middle;
+    word-wrap: break-word;
+    /*opacity: 0;*/
+    /*background-color: #42bdc2;*/
+/*    -webkit-transform:scale(0);
+    transform:scale(0);
+*/    transition:.5s;
+
+}
+.easy-slider-one .info a, 
+.easy-slider-one .info p {
+    line-height: 1.2;
+    text-align: left;    
+}
+.easy-slider-one .info p {
+    padding-top: 15px;
+    margin: 0 15px;
+    color: #fff;
+    font-size: 16px;
+}
+.easy-slider-one .info p.title {
+    font-weight: lighter;
+    font-size: 30px;
+}
+.easy-slider-one .info p.description {
+    color: rgba(256,256,256,.8);
+    font-weight: normal;
+}
+.easy-slider-one .info p small {
+    font-size: 12px;
+}
+.easy-slider-one .info a {
+    display: inline-block;
+    padding: 7px 15px;
+    background-color: #fff;
+    margin: 0 auto;
+    font-weight: normal;
+    font-size: 13px;
+    border-radius: 3px;
+}
+.easy-slider-one .info p.link {
+    margin-top: 15px;
+}
+.easy-slider-one .item:hover .info > div {
+/*    opacity: 1;
+    -webkit-transform:scale(1);
+    transform:scale(1);   
+*/}}

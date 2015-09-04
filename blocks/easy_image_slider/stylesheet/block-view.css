@@ -1,0 +1,29 @@
+.easy-slider {
+  /*opacity: 0;*/
+}
+.easy-slider.loaded {
+  /*opacity: 1;*/
+}
+.responsive-container {
+  margin-right: auto;
+  margin-left: auto;
+/*  padding-left: 15px;
+  padding-right: 15px;
+*/}
+@media (min-width: 768px) {
+  .easy-slider .responsive-container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .easy-slider .responsive-container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .easy-slider .responsive-container {
+    width: 1170px;
+  }
+}
+
+
