@@ -16,8 +16,8 @@ use Concrete\Package\EasyImageSlider\Src\Helper\MclInstaller;
 class Controller extends Package {
 
     protected $pkgHandle = 'easy_image_slider';
-    protected $appVersionRequired = '5.7.3';
-    protected $pkgVersion = '1.1';
+    protected $appVersionRequired = '5.7.5.2';
+    protected $pkgVersion = '1.2';
     protected $pkg;
 
     public function getPackageDescription() {

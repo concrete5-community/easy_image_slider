@@ -127,7 +127,7 @@ class Controller extends BlockController
         if ($fID) return File::getByID($fID);    
     }
 
-    public function registerViewAssets()
+    public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css','easy-slider-view');        
         $this->requireAsset('javascript', 'jquery');
