@@ -60,7 +60,7 @@
             },
             done: function (e, data) {
                 var target = data.newItem ? data.newItem : $(e.target);
-                $.get(getFileDetailDetailJson,{fID:data.result[0].fID}, function(file) {
+                $.get(getFileDetailDetailJson,{fID:(data.result.files || data.result)[0].fID}, function(file) {
                     fillSlideTemplate(file,target);
                 },'json');                 
             },
