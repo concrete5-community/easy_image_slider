@@ -66,8 +66,29 @@ class Controller extends BlockController
         $this->set('fDetails',$this->getFilesDetails($fIDs));
     }
 
-    function getFilesIds () { return explode(',', $this->fIDs); }
-    
+    /**
+     * @return int[]
+     */
+    public function getFilesIds () {
+        return array_values( // Reset array indexes
+            array_filter( // Remove zeroes
+                array_map('intval', explode(',', $this->fIDs))
+            )
+        );
+    }
+
+    private function getFiles()
+    {
+        $files = array();
+        foreach ($this->getFilesIds() as $fID) {
+            $file = $this->getFileFromFileID($fID);
+            if ($file !== null) {
+                $files[] = $file;
+            }
+        }
+        return $files;
+    }
+
     function getOptionsJson ()  { 
         // Cette fonction retourne un objet option
         // SI le block n'existe pas encore, ces options sont préréglées
@@ -124,7 +145,7 @@ class Controller extends BlockController
     }
 
     function getFileFromFileID ($fID) {
-        if ($fID) return File::getByID($fID);    
+        return $fID ? File::getByID($fID) : null;    
     }
 
     public function registerViewAssets($outputContent = '')
@@ -144,9 +165,8 @@ class Controller extends BlockController
         $options =  $this->getOptionsJson();
 
         // Files
-        $files = array_map(array($this,'getFileFromFileID') , explode(',', $this->fIDs));
-        $this->set('fIDs', explode(',', $this->fIDs));
-        $this->set('files',$files );
+        $this->set('fIDs', $this->getFilesIds());
+        $this->set('files', $this->getFiles());
         $this->set('options', $options );
 
         $this->generatePlaceHolderFromArray($files);
@@ -173,10 +193,7 @@ class Controller extends BlockController
     }
 
     public function isValueEmpty() {
-        if ($this->fIDs)
-            return false;
-        else 
-            return true;
+        return $this->getFilesIds() === array();
     }
 
     public function setAssetEdit () {
