@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <concrete5-cif version="1.0">
+    <blocktypes>
+        <blocktype handle="easy_image_slider" package="easy_image_slider"/>
+    </blocktypes>
     <attributekeys>
         <attributekey handle="image_link" name="Image Tags" package="easy_image_slider" searchable="1" indexed="1" type="text" category="file" />
         <attributekey handle="image_link_text" name="Image Link Text" package="easy_image_slider" searchable="1" indexed="1" type="text" category="file" />

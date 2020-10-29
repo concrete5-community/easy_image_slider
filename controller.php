@@ -6,7 +6,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Asset;
 use AssetList;
-use Concrete\Package\EasyImageSlider\Src\Helper\MclInstaller;
+use Concrete\Core\Backup\ContentImporter;
 use Package;
 use Route;
 
@@ -73,8 +73,11 @@ class Controller extends Package
     }
 
     private function installOrUpgrade() {
-        $ci = new MclInstaller($this->pkg);
-        $ci->importContentFile($this->getPackagePath() . '/config/install/base/blocktypes.xml');
-        $ci->importContentFile($this->getPackagePath() . '/config/install/base/attributes.xml');
+        if (method_exists($this, 'installContentFile')) {
+            $this->installContentFile('config/install.xml');
+        } else {
+            $ci = new ContentImporter();
+            $ci->importContentFile($this->getPackagePath() . '/config/install.xml');
+        }
     }
 }
