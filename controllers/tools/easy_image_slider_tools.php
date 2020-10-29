@@ -1,15 +1,13 @@
-<?php   
+<?php
+
 namespace Concrete\Package\EasyImageSlider\Controller\Tools;
 
-use URL;
+use Concrete\Core\Controller\Controller as RouteController;
+use Concrete\Core\File\EditResponse as FileEditResponse;
 use File;
 use FileSet;
-use Permissions;
-use \Concrete\Core\File\EditResponse as FileEditResponse;
-use \Concrete\Core\Controller\Controller as RouteController;
-
 use Loader;
-use Core;
+use Permissions;
 use stdClass;
 
 class EasyImageSliderTools extends RouteController
@@ -20,7 +18,7 @@ class EasyImageSliderTools extends RouteController
      $fp = new Permissions($this->file);
         if ($fp->canEditFileProperties()) {
             $fv = $this->file->getVersionToModify();
-            
+
             $value = $_REQUEST['value'];
             switch($_REQUEST['name']) {
                 case 'fvTitle':
@@ -42,47 +40,45 @@ class EasyImageSliderTools extends RouteController
             $sr->setMessage(t('File updated successfully.'));
             $sr->setAdditionalDataAttribute('value', $value);
             $sr->outputJSON();
-
-
         } else {
             throw new \Exception(t('Access Denied.'));
         }
         die();
     }
 
-    public function getFileSetImage () {
+    public function getFileSetImage() {
         // $fs = new SetList()->get();
         // Loader::helper('ajax')->sendResult(
         // die('coucou');
-        $fs = FileSet::getByID(intval($_REQUEST['fsID']));
+        $fs = FileSet::getByID((int) ($_REQUEST['fsID']));
         if (is_object($fs)) $fsf = $fs->getFiles();
         // print_r($fsf);
-        if (count($fsf)) :
-            foreach ($fsf as $key => $f) :
-                $fd = $this->getFileDetails($f); 
+        if (count($fsf)) {
+            foreach ($fsf as $key => $f) {
+                $fd = $this->getFileDetails($f);
                 if ($fd) $files[] = $fd;
-            endforeach;
+            }
             Loader::helper('ajax')->sendResult($files);
-        endif;
-        
+        }
     }
 
-    public function getFileThumbnailUrl ($f = NULL) {
-        if(!$f && $_REQUEST['fID']) 
+    public function getFileThumbnailUrl($f = null) {
+        if(!$f && $_REQUEST['fID'])
             $f = File::getByID($_REQUEST['fID']);
 
         $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('file_manager_detail');
-        if($type != NULL) {
+        if($type != null) {
             return $f->getThumbnailURL($type->getBaseVersion());
         }
+
         return false;
     }
 
-    public function getFileDetails ($f = NULL) {
-        if(!$f && $_REQUEST['fID']) 
+    public function getFileDetails($f = null) {
+        if(!$f && $_REQUEST['fID'])
             $f = File::getByID($_REQUEST['fID']);
 
-        $o = new stdClass;
+        $o = new stdClass();
         if(!is_object($f)) return false;
         $o->urlInline = $this->getFileThumbnailUrl($f);
         $o->title = $f->getTitle();
@@ -91,14 +87,13 @@ class EasyImageSliderTools extends RouteController
         $o->type = $f->getVersionToModify()->getGenericTypeText();
         $o->image_thumbnail_width = $f->getAttribute('image_thumbnail_width') ? $f->getAttribute('image_thumbnail_width') : '';
         $o->image_link = $f->getAttribute('image_link') ? $f->getAttribute('image_link') : '';
-        $o->image_link_text = $f->getAttribute('image_link_text') ? $f->getAttribute('image_link_text') :'';
+        $o->image_link_text = $f->getAttribute('image_link_text') ? $f->getAttribute('image_link_text') : '';
         $o->image_bg_color = $f->getAttribute('image_bg_color') ? $f->getAttribute('image_bg_color') : ''; // '#ffffff';
 
         return $o;
     }
 
-    public function getFileDetailsJson () {
+    public function getFileDetailsJson() {
          Loader::helper('ajax')->sendResult($this->getFileDetails());
     }
-
 }

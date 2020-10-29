@@ -1,4 +1,4 @@
-<?php   defined('C5_EXECUTE') or die("Access Denied.");
+<?php   defined('C5_EXECUTE') or die('Access Denied.');
 // In Composer conditions, it seems that the 'options' variables are overide after the inc() function
 // So i need to set some variable here... Don't know why ?
 $options = $controller->getOptionsJson();
@@ -14,30 +14,30 @@ $options = $controller->getOptionsJson();
             <tr>
                 <td>
                     <div class="input-group form-group form-group-small">    
-                        <?php   echo $form->text($view->field('items'),$options->items) ?>   
+                        <?php   echo $form->text($view->field('items'), $options->items) ?>   
                         <span class="input-group-addon"> items </span>   
                     </div>      
                     <small><?php   echo t('The maximum amount of items displayed<br />at a time with the widest browser width') ?></small>                        
                 </td>
                 <td>
                     <div class="input-group form-group form-group-small">                
-                        <?php   echo $form->text($view->field('margin'),$options->margin,array( 'placeholder' => t('5'))) ?>
+                        <?php   echo $form->text($view->field('margin'), $options->margin, array('placeholder' => t('5'))) ?>
                         <span class="input-group-addon"> px </span>
                     </div>
                     <small><?php   echo t('0 for no margins') ?></small>                        
                 </td>
                 <td>
                     <div class="input-group form-group form-group-small">  
-                         <?php   echo $form->text($view->field('slideSpeed'),$options->slideSpeed ) ?>
+                         <?php   echo $form->text($view->field('slideSpeed'), $options->slideSpeed) ?>
                          <span class="input-group-addon"> ms </span>
                      </div>
                 </td>
                 <td>
                     <div class="input-group form-group form-group-middle">                
                         <span class="input-group-addon">
-                            <?php   echo $form->checkbox($view->field('autoPlay'),'1',$options->autoPlay) ?>
+                            <?php   echo $form->checkbox($view->field('autoPlay'), '1', $options->autoPlay) ?>
                         </span>
-                        <?php   echo $form->text($view->field('autoPlayTime'),$options->autoPlayTime,array('placeholder' => t('5000'))) ?>            
+                        <?php   echo $form->text($view->field('autoPlayTime'), $options->autoPlayTime, array('placeholder' => t('5000'))) ?>            
                          <span class="input-group-addon"> ms </span>
                     </div>                        
                     <small><?php   echo t('If activated, set the time <br/> between slides') ?></small>                        
@@ -68,11 +68,11 @@ $options = $controller->getOptionsJson();
             <th><?php   echo $form->label($view->field('isTransparent'), t('Color Transitions')); ?></th>
             <tr>
                 <td>
-                    <?php   $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('infoBg'),$options->infoBg,array('preferredFormat'=>'rgba')) ?>
+                    <?php   $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('infoBg'), $options->infoBg, array('preferredFormat' => 'rgba')) ?>
                     <small><?php   echo t('The square with <br /> title and description') ?></small>
                 </td>
                 <td>
-                    <?php   $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('fadingColor'),$options->fadingColor,array('preferredFormat'=>'rgba')) ?>
+                    <?php   $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('fadingColor'), $options->fadingColor, array('preferredFormat' => 'rgba')) ?>
                     <small><?php   echo t('This settings is overrided by items colors') ?></small>
                 </td>
                 <td>
@@ -88,10 +88,10 @@ $options = $controller->getOptionsJson();
             <th><?php   echo $form->label($view->field('animateOut'), t('Animation Out')); ?></th>
             <tr>
                 <td>
-                    <select name="animateIn"><?php   $this->inc('elements/animate.php',array('option'=>$options->animateIn)) ?></select>
+                    <select name="animateIn"><?php   $this->inc('elements/animate.php', array('option' => $options->animateIn)) ?></select>
                 </td>                        
                 <td>
-                    <select name="animateOut"><?php   $this->inc('elements/animate.php',array('option'=>$options->animateOut)) ?></select>
+                    <select name="animateOut"><?php   $this->inc('elements/animate.php', array('option' => $options->animateOut)) ?></select>
                 </td>                        
             </tr>
         </table> -->
@@ -108,14 +108,14 @@ $options = $controller->getOptionsJson();
     <div id="tab-content-lightbox" class="ccm-ui col-md-12 options-content">
         <div class="form-group">
             <?php   echo $form->label($view->field('lightbox'), t('Lightbox')); ?>
-            <?php    echo $form->select($view->field('lightbox'), array('0' => t('None'), 'intense' => t('Full Screen'), 'lightbox' => t('Simple Lightbox')  ), $options->lightbox ,array('style'=>'width:180px')); ?>
+            <?php    echo $form->select($view->field('lightbox'), array('0' => t('None'), 'intense' => t('Full Screen'), 'lightbox' => t('Simple Lightbox')), $options->lightbox, array('style' => 'width:180px')); ?>
         </div>
         <table class="grouping">
             <th><?php   echo $form->label($view->field('fancyOverlay'), t('Lightbox overlay color')); ?></th>
             <th><?php   echo $form->label($view->field('fancyOverlayAlpha'), t('Lightbox overlay opacity (from 0 to 1)')); ?></th>
             <tr>
-                <td><?php   $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('fancyOverlay'),$options->fancyOverlay,array('preferredFormat'=>'rgba')) ?></td>
-                <td><?php   echo $form->text($view->field('fancyOverlayAlpha'),$options->fancyOverlayAlpha ) ?></td>
+                <td><?php   $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('fancyOverlay'), $options->fancyOverlay, array('preferredFormat' => 'rgba')) ?></td>
+                <td><?php   echo $form->text($view->field('fancyOverlayAlpha'), $options->fancyOverlayAlpha) ?></td>
             </tr>
         </table>
         <table class="grouping">
@@ -155,11 +155,11 @@ $options = $controller->getOptionsJson();
                 <td>
                     <div class="input-group form-group">                
                         <span class="input-group-addon">
-                            <?php   echo $form->checkbox($view->field('nav'),'1', $options->nav) ?>
+                            <?php   echo $form->checkbox($view->field('nav'), '1', $options->nav) ?>
                         </span>
-                        <?php   echo $form->text($view->field('navigationPrev'),$options->navigationPrev,array('placeholder' => t('Prev'), 'style'=>'width:80px')) ?>
+                        <?php   echo $form->text($view->field('navigationPrev'), $options->navigationPrev, array('placeholder' => t('Prev'), 'style' => 'width:80px')) ?>
                         <span class="input-group-addon"> / </span>
-                        <?php   echo $form->text($view->field('navigationNext'),$options->navigationNext,array('placeholder' => t('Next'), 'style'=>'width:80px')) ?>                
+                        <?php   echo $form->text($view->field('navigationNext'), $options->navigationNext, array('placeholder' => t('Next'), 'style' => 'width:80px')) ?>                
                     </div>
                 </td>
                 <td>

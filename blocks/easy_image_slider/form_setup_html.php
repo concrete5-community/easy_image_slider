@@ -1,35 +1,35 @@
-<?php    defined('C5_EXECUTE') or die("Access Denied.");
+<?php    defined('C5_EXECUTE') or die('Access Denied.');
 $fp = FilePermissions::getGlobal();
 $tp = new TaskPermission();
 ?>
 
 <ul id="" class="ccm-inline-toolbar ccm-ui easy-image-toolbar">
     <li class="ccm-sub-toolbar-text-cell">
-        <?php   if(count($fileSets)) : ?>
-        <label for="fsID"><?php   echo t("Add a Fileset:")?></label>
+        <?php   if(count($fileSets)) { ?>
+        <label for="fsID"><?php   echo t('Add a Fileset:')?></label>
         <select name="fsID" id="fsID" style="width: auto !important">
             <option value="0"><?php   echo t('Choose') ?></option>
-            <?php   foreach ($fileSets as $key => $fs) :?>
+            <?php   foreach ($fileSets as $key => $fs) { ?>
             <option value="<?php   echo $fs->getFileSetID() ?>"><?php   echo $fs->getFileSetName() ?></option>
-            <?php   endforeach; ?>
+            <?php   } ?>
         </select>
-        <?php   else: ?>
-        <label for="fsID"><?php   echo t("No Fileset")?></label>
-        <?php   endif ?>
+        <?php   } else { ?>
+        <label for="fsID"><?php   echo t('No Fileset')?></label>
+        <?php   } ?>
     </li>
-    <?php   foreach ($controller->getOptionTabs() as $key => $value) :?>
+    <?php   foreach ($controller->getOptionTabs() as $key => $value) { ?>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-options">
         <button id="<?php   echo $value['handle'] ?>-button" type="button" class="btn btn-mini option-button" rel="tab-content-<?php   echo $value['handle'] ?>"><i class="fa fa-lg <?php   echo $value['icon'] ?>"></i> <?php   echo $value['name'] ?></button>
     </li>
-    <?php   endforeach; ?>
+    <?php   } ?>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
-        <button onclick="cancelBlockForm()" id="" type="button" class="btn btn-mini"><?php   echo t("Cancel")?></button>
+        <button onclick="cancelBlockForm()" id="" type="button" class="btn btn-mini"><?php   echo t('Cancel')?></button>
     </li>
-    <?php   if(!$isComposer): ?>
+    <?php   if(!$isComposer) { ?>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
       <button onclick="submitBlockForm()" class="btn btn-primary" type="button" id="easy_image_save"><?php   if ($controller->getTask() == 'add') { ?><?php   echo t('Add Gallery')?><?php   } else { ?><?php   echo t('Update Gallery')?><?php   } ?></button>
     </li>    
-    <?php   endif ?>
+    <?php   } ?>
  </ul>
  
 <?php   $this->inc('advanced_options.php', array('view' => $view, 'options' => $controller->getOptionsJson(), 'form' => $form)); ?>
@@ -90,9 +90,9 @@ $tp = new TaskPermission();
 
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?php   echo Loader::helper('validation/token')->generate('editor')?>";
-    var getFileDetailDetailJson = '<?php   echo URL::to("/easyimageslider/tools/getfiledetailsjson")?>';
-    var saveFieldURL = '<?php   echo URL::to("/easyimageslider/tools/savefield")?>';
-    var getFilesetImagesURL = '<?php   echo URL::to("/easyimageslider/tools/getfilesetimages")?>';
+    var getFileDetailDetailJson = '<?php   echo URL::to('/easyimageslider/tools/getfiledetailsjson')?>';
+    var saveFieldURL = '<?php   echo URL::to('/easyimageslider/tools/savefield')?>';
+    var getFilesetImagesURL = '<?php   echo URL::to('/easyimageslider/tools/getfilesetimages')?>';
     
     var manager = easy_slide_manager ($('.easy_slide-items'));
 
@@ -102,10 +102,10 @@ $tp = new TaskPermission();
     ccmi18n.imageSize = "<?php   echo t('Please upload a smaller image, max size is 6 MB') ?>";
 
     $(document).ready(function(){
-        <?php   if (is_array($fDetails) && count($fDetails)) : ?>
-            <?php   foreach ($fDetails as $key => $f) : ?>
+        <?php   if (is_array($fDetails) && count($fDetails)) { ?>
+            <?php   foreach ($fDetails as $key => $f) { ?>
         fillSlideTemplate(<?php   echo json_encode($f) ?>);
-            <?php   endforeach ?>
-        <?php   endif ?>        
+            <?php   } ?>
+        <?php   } ?>        
     });
 </script>

@@ -1,5 +1,5 @@
-<?php  
-defined('C5_EXECUTE') or die("Access Denied.");
+<?php
+defined('C5_EXECUTE') or die('Access Denied.');
 
 ?><script>
 
@@ -7,7 +7,7 @@ $(document).ready(function(){
 
     containerBg = $('#easy-slider-wrapper-<?php   echo $bID?>').data('colorbg');
 
-<?php   if($options->lightbox == 'lightbox') : ?>
+<?php   if($options->lightbox == 'lightbox') { ?>
     $("#easy-slider-<?php   echo $bID?> a[rel^='prettyPhoto']").prettyPhoto({
       theme: 'pp_default',
       changepicturecallback: function(){
@@ -17,10 +17,10 @@ $(document).ready(function(){
           }
       }      
     });
-<?php   elseif ($options->lightbox == 'intense') : ?>
+<?php   } elseif ($options->lightbox == 'intense') { ?>
     $('#easy-slider-<?php   echo $bID?> a').click(function(e){e.preventDefault()});
     Intense($('#easy-slider-<?php   echo $bID?> a'));
-<?php   endif ?>
+<?php   } ?>
 
 /* -- OWL Carousel -- */
     var easyOWL = $("#easy-slider-<?php   echo $bID?>");
@@ -30,9 +30,9 @@ $(document).ready(function(){
         items : <?php   echo $options->items ?>,
         rewindNav : <?php    echo $options->loop ? 'true' : 'false'  ?>,
         // -- Single Item
-<?php   if($options->isSingleItemSlide) : ?>
+<?php   if($options->isSingleItemSlide) { ?>
         singleItem:true,        
-<?php   endif ?>
+<?php   } ?>
         autoHeight:true,
         afterAction : sliderOnChange,
         slideSpeed : <?php   echo $options->slideSpeed ?>,
@@ -52,11 +52,11 @@ $(document).ready(function(){
           $('#easy-slider-<?php   echo $bID?> #item-' + i).addClass('active');
       }
 
-<?php   if($options->isTransparent) : // If transparent option is selected, we keep color of the visible item to put on the container, to see a transition ?>      
+<?php   if($options->isTransparent) { // If transparent option is selected, we keep color of the visible item to put on the container, to see a transition?>      
       var colorBg =  $('#easy-slider-<?php   echo $bID?> #item-' + visible).data('color');      
       if (colorBg) $('#easy-slider-wrapper-<?php   echo $bID?>').css('background-color', colorBg );
       else $('#easy-slider-wrapper-<?php   echo $bID?>').css('background-color', $('#easy-slider-wrapper-<?php   echo $bID?>').data('colorbg') );
-<?php   endif ?>      
+<?php   } ?>      
     }
 });
 
