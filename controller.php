@@ -14,26 +14,43 @@ class Controller extends Package
 {
     protected $pkgHandle = 'easy_image_slider';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\Package::$appVersionRequired
+     */
     protected $appVersionRequired = '5.7.5.2';
 
     protected $pkgVersion = '1.2';
 
-    protected $pkg;
-
-    public function getPackageDescription() {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\Package::getPackageDescription()
+     */
+    public function getPackageDescription()
+    {
         return t('Responsive & Touch enabled Slider & Carousel made Easy');
     }
 
-    public function getPackageName() {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\Package::getPackageName()
+     */
+    public function getPackageName()
+    {
         return t('Easy Image Slider');
     }
 
-    public function on_start() {
+    public function on_start()
+    {
         $this->registerRoutes();
         $this->registerAssets();
     }
 
-    public function registerAssets() {
+    public function registerAssets()
+    {
         $al = AssetList::getInstance();
         $al->register('javascript', 'knob', 'blocks/easy_image_slider/javascript/build/jquery.knob.js', array('version' => '1.2.11', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('javascript', 'easy-slider-edit', 'blocks/easy_image_slider/javascript/build/block-edit.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
@@ -52,27 +69,37 @@ class Controller extends Package
         $al->register('css', 'prettyPhoto', 'blocks/easy_image_slider/stylesheet/prettyPhoto.css', array('version' => '3.1.5', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
     }
 
-    public function registerRoutes() {
+    public function registerRoutes()
+    {
         Route::register('/easyimageslider/tools/savefield', '\Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools::save');
         Route::register('/easyimageslider/tools/getfilesetimages', '\Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools::getFileSetImage');
         Route::register('/easyimageslider/tools/getfiledetailsjson', '\Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools::getFileDetailsJson');
     }
 
-    public function install() {
-    // Get the package object
-        $this->pkg = parent::install();
-
-    // Installing
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\Package::install()
+     */
+    public function install()
+    {
+        parent::install();
         $this->installOrUpgrade();
     }
 
-    public function upgrade() {
-        $this->pkg = $this;
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Package\Package::upgrade()
+     */
+    public function upgrade()
+    {
         $this->installOrUpgrade();
         parent::upgrade();
     }
 
-    private function installOrUpgrade() {
+    private function installOrUpgrade()
+    {
         if (method_exists($this, 'installContentFile')) {
             $this->installContentFile('config/install.xml');
         } else {

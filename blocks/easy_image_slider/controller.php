@@ -13,49 +13,119 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\Set\SetList as FileSetList;
 use Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools;
 use File;
-use StdClass;
+use stdClass;
 
 class Controller extends BlockController
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btTable
+     */
     protected $btTable = 'btEasyImageSlider';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btInterfaceWidth
+     */
     protected $btInterfaceWidth = '600';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btWrapperClass
+     */
     protected $btWrapperClass = 'ccm-ui';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btInterfaceHeight
+     */
     protected $btInterfaceHeight = '465';
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btCacheBlockRecord
+     */
     protected $btCacheBlockRecord = false;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btExportFileColumns
+     */
     protected $btExportFileColumns = array('fID');
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btCacheBlockOutput
+     */
     protected $btCacheBlockOutput = false;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btCacheBlockOutputOnPost
+     */
     protected $btCacheBlockOutputOnPost = false;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btCacheBlockOutputForRegisteredUsers
+     */
     protected $btCacheBlockOutputForRegisteredUsers = false;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btSupportsInlineEdit
+     */
     protected $btSupportsInlineEdit = true;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btSupportsInlineAdd
+     */
     protected $btSupportsInlineAdd = true;
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btDefaultSet
+     */
     protected $btDefaultSet = 'multimedia';
 
     protected $optionTabs = array();
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getBlockTypeDescription()
+     */
     public function getBlockTypeDescription()
     {
         return t('A OWL Carousel made easy for concrete5');
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getBlockTypeName()
+     */
     public function getBlockTypeName()
     {
         return t('Easy Images Slider');
     }
 
-    public function add() {
+    public function add()
+    {
         $this->setAssetEdit();
-
         $this->set('fileSets', $this->getFileSetList());
         $this->set('options', $this->getOptionsJson());
     }
@@ -63,32 +133,40 @@ class Controller extends BlockController
     public function edit()
     {
         $this->setAssetEdit();
-
         $fIDs = $this->getFilesIds();
-
         $this->set('fileSets', $this->getFileSetList());
         $this->set('options', $this->getOptionsJson());
         $this->set('fIDs', $fIDs);
         $this->set('fDetails', $this->getFilesDetails($fIDs));
     }
 
+    public function composer()
+    {
+        $this->setAssetEdit();
+    }
+
     /**
      * @return int[]
      */
-    public function getFilesIds() {
+    public function getFilesIds()
+    {
         return array_values( // Reset array indexes
             array_filter( // Remove zeroes
-                array_map('intval', explode(',', $this->fIDs))
+                array_map('intval', explode(',', (string) $this->fIDs))
             )
         );
     }
 
-    public function getOptionsJson() {
+    /**
+     * @return \stdClass
+     */
+    public function getOptionsJson()
+    {
         // Cette fonction retourne un objet option
         // SI le block n'existe pas encore, ces options sont préréglées
         // Si il existe on transfome la chaine de charactère en json
         if ($this->isValueEmpty()) {
-            $options = new StdClass();
+            $options = new stdClass();
             $options->lightbox = 0;
             $options->items = 4;
             $options->ItemsTitle = 1;
@@ -119,27 +197,47 @@ class Controller extends BlockController
 
             return $options;
         }
-            $options = json_decode($this->options);
-            $options->isSingleItemSlide = $options->items == 1;
-            // legacy
-            // if(!isset($options->fancyOverlay)) $options->fancyOverlay = '#f0f0f0';
-            // end legacy
-            return $options;
+        $options = json_decode($this->options);
+        $options->isSingleItemSlide = $options->items == 1;
+        // legacy
+        // if(!isset($options->fancyOverlay)) $options->fancyOverlay = '#f0f0f0';
+        // end legacy
+
+        return $options;
     }
 
-    public function getFilesDetails($fIDs) {
+    /**
+     * @param int[] $fIDs
+     *
+     * @return \stdClass[]
+     */
+    public function getFilesDetails($fIDs)
+    {
         $tools = new EasyImageSliderTools();
         $fDetails = array();
-        foreach ($fIDs as $key => $fID) {
-            $f = File::getByID($fID);
-            if (is_object($f)) $fDetails[] = $tools->getFileDetails($f);
+        foreach ($fIDs as $fID) {
+            $f = $this->getFileFromFileID($fID);
+            if ($f !== null) {
+                $fDetails[] = $tools->getFileDetails($f);
+            }
         }
 
         return $fDetails;
     }
 
-    public function getFileFromFileID($fID) {
-        return $fID ? File::getByID($fID) : null;
+    /**
+     * @param int|mixed $fID
+     *
+     * @return \Concrete\Core\File\File|null
+     */
+    public function getFileFromFileID($fID)
+    {
+        if (!$fID) {
+            return null;
+        }
+        $f = File::getByID($fID);
+
+        return is_object($f) && !$f->isError() ? $f : null;
     }
 
     public function registerViewAssets($outputContent = '')
@@ -154,20 +252,17 @@ class Controller extends BlockController
 //      $this->requireAsset('css','animate');
     }
 
-    public function view() {
-        $time_start = microtime(true);
+    public function view()
+    {
         $options = $this->getOptionsJson();
-
         // Files
         $files = $this->getFiles();
         $this->set('fIDs', $this->getFilesIds());
         $this->set('files', $files);
         $this->set('options', $options);
-
         $this->generatePlaceHolderFromArray($files);
-
         // Lightbox
-        if($options->lightbox == 'lightbox') {
+        if ($options->lightbox == 'lightbox') {
             $this->requireAsset('javascript', 'prettyPhoto');
             $this->requireAsset('css', 'prettyPhoto');
         } elseif ($options->lightbox == 'intense'){
@@ -175,21 +270,26 @@ class Controller extends BlockController
         }
     }
 
-    public function getFileSetList() {
+    /**
+     * @return \Concrete\Core\File\Set\Set[]
+     */
+    public function getFileSetList()
+    {
         $fs = new FileSetList();
 
         return $fs->get();
     }
 
-    public function composer() {
-        $this->setAssetEdit();
-    }
-
-    public function isValueEmpty() {
+    /**
+     * @return bool
+     */
+    public function isValueEmpty()
+    {
         return $this->getFilesIds() === array();
     }
 
-    public function setAssetEdit() {
+    public function setAssetEdit()
+    {
         $this->requireAsset('core/file-manager');
         $this->requireAsset('css', 'core/file-manager');
         $this->requireAsset('css', 'jquery/ui');
@@ -210,7 +310,8 @@ class Controller extends BlockController
         $this->set('optionTabs', $this->getOptionTabs);
     }
 
-    public function getOptionTabs() {
+    public function getOptionTabs()
+    {
         return array(
             array('handle' => 'settings', 'name' => t('Settings'), 'icon' => 'fa-cogs'),
             array('handle' => 'lightbox', 'name' => t('Lightbox'), 'icon' => 'fa-picture-o'),
@@ -223,21 +324,35 @@ class Controller extends BlockController
         $options = $args;
         unset($options['fID']);
         // Numeric checking
-        if (!is_numeric($options['fancyOverlayAlpha']) || $options['fancyOverlayAlpha'] > 1 || $options['fancyOverlayAlpha'] < 0) $options['fancyOverlayAlpha'] = .9;
-        if (!is_numeric($options['slideSpeed']) || $options['slideSpeed'] > 3000 || $options['slideSpeed'] < 0) $options['slideSpeed'] = 200;
-        if (!is_numeric($options['autoPlayTime']) || $options['autoPlayTime'] > 50000 || $options['autoPlayTime'] < 0) $options['autoPlayTime'] = 5000;
-        if (!is_numeric($options['items']) || $options['items'] > 20 || $options['items'] < 0) $options['items'] = 4;
-        if (!is_numeric($options['margin']) || $options['margin'] > 20 || $options['margin'] < 0) $options['margin'] = 5;
+        if (!is_numeric($options['fancyOverlayAlpha']) || $options['fancyOverlayAlpha'] > 1 || $options['fancyOverlayAlpha'] < 0) {
+            $options['fancyOverlayAlpha'] = .9;
+        }
+        if (!is_numeric($options['slideSpeed']) || $options['slideSpeed'] > 3000 || $options['slideSpeed'] < 0) {
+            $options['slideSpeed'] = 200;
+        }
+        if (!is_numeric($options['autoPlayTime']) || $options['autoPlayTime'] > 50000 || $options['autoPlayTime'] < 0) {
+            $options['autoPlayTime'] = 5000;
+        }
+        if (!is_numeric($options['items']) || $options['items'] > 20 || $options['items'] < 0) {
+            $options['items'] = 4;
+        }
+        if (!is_numeric($options['margin']) || $options['margin'] > 20 || $options['margin'] < 0) {
+            $options['margin'] = 5;
+        }
         // Text inputs too long
-        // if (count_chars($options['navigationPrev']) > 20 ) $options['navigationPrev'] = t('Prev');
-        // if (count_chars($options['navigationNext']) > 20 ) $options['navigationNext'] = t('Next');
+        /*
+        if (count_chars($options['navigationPrev']) > 20 ) {
+            $options['navigationPrev'] = t('Prev');
+        }
+        if (count_chars($options['navigationNext']) > 20 ) {
+            $options['navigationNext'] = t('Next');
+        }
+         */
         // Checkboxes
         $options['nav'] = isset($args['nav']) ? 1 : 0;
         $options['autoPlay'] = isset($args['autoPlay']) ? 1 : 0;
-
         // Encoding
         $args['options'] = json_encode($options);
-
         if(is_array($args['fID'])) {
             $args['fIDs'] = implode(',', $args['fID']);
             $this->generatePlaceHolderFromArray($args['fID']);
@@ -246,10 +361,18 @@ class Controller extends BlockController
         parent::save($args);
     }
 
-    public function hex2rgb($hex) {
+    /**
+     * Returns the rgb values separated by commas.
+     *
+     * @param string $hex
+     *
+     * @return string
+     */
+    public function hex2rgb($hex)
+    {
        $hex = str_replace('#', '', $hex);
 
-       if(strlen($hex) == 3) {
+       if (strlen($hex) == 3) {
           $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
           $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
           $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
@@ -260,11 +383,14 @@ class Controller extends BlockController
        }
        $rgb = array($r, $g, $b);
 
-       return implode(',', $rgb); // returns the rgb values separated by commas
-       // return $rgb; // returns an array with the rgb values
+       return implode(',', $rgb);
     }
 
-    public function generatePlaceHolderFromArray($array) {
+    /**
+     * @param int[]|\Concrete\Core\File\File[] $array
+     */
+    public function generatePlaceHolderFromArray($array)
+    {
         $placeholderMaxSize = 600;
         if (empty($array)) {
             $array = array();
@@ -273,16 +399,19 @@ class Controller extends BlockController
         } else {
             $files = $array;
         }
-
-        foreach ($files as $key => $f) {
-            if(!is_object($f)) continue;
+        foreach ($files as $f) {
+            if (!is_object($f)) {
+                continue;
+            }
             $w = $f->getAttribute('width');
             $h = $f->getAttribute('height');
             $new_width = $placeholderMaxSize;
             $new_height = floor($h * ($placeholderMaxSize / $w));
 
             $placeholderFile = __DIR__ . "/images/placeholders/placeholder-{$w}-{$h}.png";
-            if (file_exists($placeholderFile)) continue;
+            if (file_exists($placeholderFile)) {
+                continue;
+            }
             $img = imagecreatetruecolor($new_width, $new_height);
             imagesavealpha($img, true);
 
@@ -298,6 +427,9 @@ class Controller extends BlockController
         }
     }
 
+    /**
+     * @return \Concrete\Core\File\File[]
+     */
     private function getFiles()
     {
         $files = array();
