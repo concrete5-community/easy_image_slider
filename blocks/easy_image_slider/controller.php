@@ -159,8 +159,9 @@ class Controller extends BlockController
         $options = $this->getOptionsJson();
 
         // Files
+        $files = $this->getFiles();
         $this->set('fIDs', $this->getFilesIds());
-        $this->set('files', $this->getFiles());
+        $this->set('files', $files);
         $this->set('options', $options);
 
         $this->generatePlaceHolderFromArray($files);
@@ -265,8 +266,9 @@ class Controller extends BlockController
 
     public function generatePlaceHolderFromArray($array) {
         $placeholderMaxSize = 600;
-
-        if (!is_object($array[0])) {
+        if (empty($array)) {
+            $array = array();
+        } elseif (!is_object($array[0])) {
             $files = array_map(array($this, 'getFileFromFileID'), $array);
         } else {
             $files = $array;
