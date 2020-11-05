@@ -142,7 +142,21 @@ class Controller extends BlockController
 
     public function composer()
     {
+        $this->addHeaderItem(<<<'EOT'
+?>
+<style>
+.ccm-inline-toolbar.ccm-ui.easy-image-toolbar {
+    opacity: 1;
+}
+.easy-image-toolbar .ccm-inline-toolbar-button-save, .easy-image-toolbar .ccm-inline-toolbar-button-cancel {
+    display: none;
+}
+</style>
+EOT
+        );
         $this->setAssetEdit();
+        $this->set('fDetails', $this->getFilesDetails($this->getFilesIds()));
+        $this->set('fileSets', $this->getFileSetList());
     }
 
     /**
