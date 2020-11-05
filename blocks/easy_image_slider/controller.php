@@ -393,7 +393,7 @@ class Controller extends BlockController
     {
         $placeholderMaxSize = 600;
         if (empty($array)) {
-            $array = array();
+            $files = array();
         } elseif (!is_object($array[0])) {
             $files = array_map(array($this, 'getFileFromFileID'), $array);
         } else {
