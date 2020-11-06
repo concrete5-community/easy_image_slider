@@ -142,7 +142,8 @@ class Controller extends BlockController
 
     public function composer()
     {
-        $this->addHeaderItem(<<<'EOT'
+        $this->addHeaderItem(
+            <<<'EOT'
 ?>
 <style>
 .ccm-inline-toolbar.ccm-ui.easy-image-toolbar {
@@ -157,18 +158,6 @@ EOT
         $this->setAssetEdit();
         $this->set('fDetails', $this->getFilesDetails($this->getFilesIds()));
         $this->set('fileSets', $this->getFileSetList());
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getFilesIds()
-    {
-        return array_values( // Reset array indexes
-            array_filter( // Remove zeroes
-                array_map('intval', explode(',', (string) $this->fIDs))
-            )
-        );
     }
 
     /**
@@ -439,6 +428,18 @@ EOT
             // Destroy image
             imagedestroy($img);
         }
+    }
+
+    /**
+     * @return int[]
+     */
+    protected function getFilesIds()
+    {
+        return array_values( // Reset array indexes
+            array_filter( // Remove zeroes
+                array_map('intval', explode(',', (string) $this->fIDs))
+            )
+        );
     }
 
     /**
