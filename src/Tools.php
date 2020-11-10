@@ -4,10 +4,10 @@ namespace EasyImageSlider;
 
 use Concrete\Core\Controller\Controller as RouteController;
 use Concrete\Core\File\EditResponse as FileEditResponse;
-use File;
-use FileSet;
+use Concrete\Core\File\File;
+use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Permission\Checker;
 use Loader;
-use Permissions;
 use stdClass;
 
 class Tools extends RouteController
@@ -15,7 +15,7 @@ class Tools extends RouteController
     public function save()
     {
         $this->file = File::getByID($_REQUEST['fID']);
-        $fp = new Permissions($this->file);
+        $fp = new Checker($this->file);
         if ($fp->canEditFileProperties()) {
             $fv = $this->file->getVersionToModify();
 

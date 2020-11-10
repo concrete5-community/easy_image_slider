@@ -4,10 +4,10 @@ namespace Concrete\Package\EasyImageSlider;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-use Asset;
-use AssetList;
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Backup\ContentImporter;
-use Package;
+use Concrete\Core\Package\Package;
 use Route;
 
 class Controller extends Package

@@ -5,14 +5,9 @@ namespace Concrete\Package\EasyImageSlider\Block\EasyImageSlider;
 defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Block\BlockController;
-// use Asset;
-// use AssetList;
-// use \Concrete\Core\Http\ResponseAssetGroup;
-// use Permissions;
-
+use Concrete\Core\File\File;
 use Concrete\Core\File\Set\SetList as FileSetList;
 use EasyImageSlider\Tools;
-use File;
 use stdClass;
 
 class Controller extends BlockController

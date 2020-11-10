@@ -1,6 +1,7 @@
 <?php
 
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
+use Concrete\Core\Page\Page;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
