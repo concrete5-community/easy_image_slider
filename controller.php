@@ -26,6 +26,15 @@ class Controller extends Package
     /**
      * {@inheritdoc}
      *
+     * @see \Concrete\Core\Package\Package::$pkgAutoloaderRegistries
+     */
+    protected $pkgAutoloaderRegistries = array(
+        'src' => 'EasyImageSlider',
+    );
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Package\Package::getPackageDescription()
      */
     public function getPackageDescription()
@@ -71,9 +80,9 @@ class Controller extends Package
 
     public function registerRoutes()
     {
-        Route::register('/easyimageslider/tools/savefield', '\Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools::save');
-        Route::register('/easyimageslider/tools/getfilesetimages', '\Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools::getFileSetImage');
-        Route::register('/easyimageslider/tools/getfiledetailsjson', '\Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools::getFileDetailsJson');
+        Route::register('/easyimageslider/tools/savefield', 'EasyImageSlider\Tools::save');
+        Route::register('/easyimageslider/tools/getfilesetimages', 'EasyImageSlider\Tools::getFileSetImage');
+        Route::register('/easyimageslider/tools/getfiledetailsjson', 'EasyImageSlider\Tools::getFileDetailsJson');
     }
 
     /**

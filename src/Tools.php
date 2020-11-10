@@ -1,6 +1,6 @@
 <?php
 
-namespace Concrete\Package\EasyImageSlider\Controller\Tools;
+namespace EasyImageSlider;
 
 use Concrete\Core\Controller\Controller as RouteController;
 use Concrete\Core\File\EditResponse as FileEditResponse;
@@ -10,17 +10,17 @@ use Loader;
 use Permissions;
 use stdClass;
 
-class EasyImageSliderTools extends RouteController
+class Tools extends RouteController
 {
     public function save()
     {
-    $this->file = File::getByID($_REQUEST['fID']);
-     $fp = new Permissions($this->file);
+        $this->file = File::getByID($_REQUEST['fID']);
+        $fp = new Permissions($this->file);
         if ($fp->canEditFileProperties()) {
             $fv = $this->file->getVersionToModify();
 
             $value = $_REQUEST['value'];
-            switch($_REQUEST['name']) {
+            switch ($_REQUEST['name']) {
                 case 'fvTitle':
                     $fv->updateTitle($value);
                     break;
@@ -46,40 +46,51 @@ class EasyImageSliderTools extends RouteController
         die();
     }
 
-    public function getFileSetImage() {
+    public function getFileSetImage()
+    {
         // $fs = new SetList()->get();
         // Loader::helper('ajax')->sendResult(
         // die('coucou');
         $fs = FileSet::getByID((int) ($_REQUEST['fsID']));
-        if (is_object($fs)) $fsf = $fs->getFiles();
+        if (is_object($fs)) {
+            $fsf = $fs->getFiles();
+        }
         // print_r($fsf);
         if (count($fsf)) {
             foreach ($fsf as $key => $f) {
                 $fd = $this->getFileDetails($f);
-                if ($fd) $files[] = $fd;
+                if ($fd) {
+                    $files[] = $fd;
+                }
             }
             Loader::helper('ajax')->sendResult($files);
         }
     }
 
-    public function getFileThumbnailUrl($f = null) {
-        if(!$f && $_REQUEST['fID'])
+    public function getFileThumbnailUrl($f = null)
+    {
+        if (!$f && $_REQUEST['fID']) {
             $f = File::getByID($_REQUEST['fID']);
+        }
 
         $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('file_manager_detail');
-        if($type != null) {
+        if ($type != null) {
             return $f->getThumbnailURL($type->getBaseVersion());
         }
 
         return false;
     }
 
-    public function getFileDetails($f = null) {
-        if(!$f && $_REQUEST['fID'])
+    public function getFileDetails($f = null)
+    {
+        if (!$f && $_REQUEST['fID']) {
             $f = File::getByID($_REQUEST['fID']);
+        }
 
         $o = new stdClass();
-        if(!is_object($f)) return false;
+        if (!is_object($f)) {
+            return false;
+        }
         $o->urlInline = $this->getFileThumbnailUrl($f);
         $o->title = $f->getTitle();
         $o->description = $f->getDescription();
@@ -93,7 +104,8 @@ class EasyImageSliderTools extends RouteController
         return $o;
     }
 
-    public function getFileDetailsJson() {
-         Loader::helper('ajax')->sendResult($this->getFileDetails());
+    public function getFileDetailsJson()
+    {
+        Loader::helper('ajax')->sendResult($this->getFileDetails());
     }
 }

@@ -11,7 +11,7 @@ use Concrete\Core\Block\BlockController;
 // use Permissions;
 
 use Concrete\Core\File\Set\SetList as FileSetList;
-use Concrete\Package\EasyImageSlider\Controller\Tools\EasyImageSliderTools;
+use EasyImageSlider\Tools;
 use File;
 use stdClass;
 
@@ -216,7 +216,7 @@ EOT
      */
     public function getFilesDetails($fIDs)
     {
-        $tools = new EasyImageSliderTools();
+        $tools = new Tools();
         $fDetails = array();
         foreach ($fIDs as $fID) {
             $f = $this->getFileFromFileID($fID);
