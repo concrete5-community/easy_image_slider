@@ -1,5 +1,7 @@
 <?php
 
+use Concrete\Core\Form\Service\Widget\Color;
+
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
@@ -12,7 +14,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 // In Composer conditions, it seems that the 'options' variables are overide after the inc() function
 // So i need to set some variable here... Don't know why ?
 $options = $controller->getOptionsJson();
-
+$color = new Color();
 ?>
 <div class="row">
     <div id="tab-content-settings" class="ccm-ui col-md-12 options-content">
@@ -79,11 +81,11 @@ $options = $controller->getOptionsJson();
             <th><?php echo $form->label($view->field('isTransparent'), t('Color Transitions')) ?></th>
             <tr>
                 <td>
-                    <?php $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('infoBg'), $options->infoBg, array('preferredFormat' => 'rgba')) ?>
+                    <?php $color->output($view->field('infoBg'), $options->infoBg, array('preferredFormat' => 'rgba')) ?>
                     <small><?php echo t('The square with <br /> title and description') ?></small>
                 </td>
                 <td>
-                    <?php $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('fadingColor'), $options->fadingColor, array('preferredFormat' => 'rgba')) ?>
+                    <?php $color->output($view->field('fadingColor'), $options->fadingColor, array('preferredFormat' => 'rgba')) ?>
                     <small><?php echo t('This settings is overrided by items colors') ?></small>
                 </td>
                 <td>
@@ -122,7 +124,7 @@ $options = $controller->getOptionsJson();
             <th><?php echo $form->label($view->field('fancyOverlay'), t('Lightbox overlay color')) ?></th>
             <th><?php echo $form->label($view->field('fancyOverlayAlpha'), t('Lightbox overlay opacity (from 0 to 1)')) ?></th>
             <tr>
-                <td><?php $col = new Concrete\Core\Form\Service\Widget\Color(); $col->output($view->field('fancyOverlay'), $options->fancyOverlay, array('preferredFormat' => 'rgba')) ?></td>
+                <td><?php $color->output($view->field('fancyOverlay'), $options->fancyOverlay, array('preferredFormat' => 'rgba')) ?></td>
                 <td><?php echo $form->text($view->field('fancyOverlayAlpha'), $options->fancyOverlayAlpha) ?></td>
             </tr>
         </table>
