@@ -45,12 +45,18 @@ if ($c->isEditMode()) {
                 $linkUrlText = $f->getAttribute('image_link_text');
                 $displayInfos = $options->ItemsTitle || $options->ItemsDescription || $linkUrl && $linkUrlText;
                 ?>
-                <div class="item" id="item-<?php echo $key ?>" style="<?php echo $thumbnailBackground ?>" <?php if ($f->getAttribute('image_bg_color')) { ?>data-color="<?php echo $f->getAttribute('image_bg_color') ?><?php } ?>" >
+                <div class="item" id="item-<?php echo $key ?>" style="<?php echo $thumbnailBackground ?>" <?php if ($f->getAttribute('image_bg_color')) { ?>data-color="<?php echo $f->getAttribute('image_bg_color') ?><?php } ?>">
                     <?php
                     if ($options->lightbox && !$linkUrl) {
-                        ?>
-                        <a href="<?php echo $fullUrl ?>" data-image="<?php echo $fullUrl ?>" <?php if ($options->lightboxTitle) { ?> title="<b><?php echo $f->getTitle() ?></b><?php if ($options->lightboxDescription) { ?><br /><?php echo $f->getDescription() ?><?php } ?>"<?php } ?>>
-                        <?php
+                        echo '<a href="', h($fullUrl), '" data-image="', h($fullUrl), '"';
+                        if ($options->lightboxTitle) {
+                            echo ' title="', h('<b>' . $f->getTitle() . '</b>');
+                            if ($options->lightboxDescription) {
+                                echo h('<br />' . $f->getDescription());
+                            }
+                            echo '"';
+                        }
+                        echo '>';
                     }
                     ?>
                     <img src="<?php echo $placeHolderUrl ?>" data-src="<?php echo $retinaThumbnailUrl ?>" alt="<?php echo $f->getTitle() ?>" <?php if ($options->lazy) { ?> class="lazyOwl" <?php } ?> />
@@ -82,9 +88,7 @@ if ($c->isEditMode()) {
                         <?php
                     }
                     if ($options->lightbox && !$linkUrl) {
-                        ?>
-                        </a>
-                        <?php
+                        echo '</a>';
                     }
                     ?>
                 </div>
