@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\File\Set\Set[] $fileSets
  * @var stdClass[] $fDetails
+ * @var Concrete\Core\Validation\CSRF\Token $token
  * @var bool|null $isComposer (may be unset)
  */
 ?>
@@ -112,7 +113,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     </div>
 </script>
 <script>
-    var CCM_EDITOR_SECURITY_TOKEN = "<?php echo Loader::helper('validation/token')->generate('editor') ?>";
+    var CCM_EDITOR_SECURITY_TOKEN = "<?php echo $token->generate('editor') ?>";
     var getFileDetailDetailJson = '<?php echo URL::to('/easyimageslider/tools/getfiledetailsjson') ?>';
     var saveFieldURL = '<?php echo URL::to('/easyimageslider/tools/savefield') ?>';
     var getFilesetImagesURL = '<?php echo URL::to('/easyimageslider/tools/getfilesetimages') ?>';

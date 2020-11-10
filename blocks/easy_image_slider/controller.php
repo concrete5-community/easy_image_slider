@@ -7,6 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\SetList as FileSetList;
+use Concrete\Core\Support\Facade\Application;
 use EasyImageSlider\Tools;
 use stdClass;
 
@@ -120,23 +121,20 @@ class Controller extends BlockController
 
     public function add()
     {
-        $this->setAssetEdit();
-        $this->set('fileSets', $this->getFileSetList());
-        $this->set('options', $this->getOptionsJson());
+        $this->configureEdit();
     }
 
     public function edit()
     {
-        $this->setAssetEdit();
+        $this->configureEdit();
         $fIDs = $this->getFilesIds();
-        $this->set('fileSets', $this->getFileSetList());
-        $this->set('options', $this->getOptionsJson());
         $this->set('fIDs', $fIDs);
         $this->set('fDetails', $this->getFilesDetails($fIDs));
     }
 
     public function composer()
     {
+        $this->configureEdit();
         $this->addHeaderItem(
             <<<'EOT'
 ?>
@@ -150,9 +148,7 @@ class Controller extends BlockController
 </style>
 EOT
         );
-        $this->setAssetEdit();
         $this->set('fDetails', $this->getFilesDetails($this->getFilesIds()));
-        $this->set('fileSets', $this->getFileSetList());
     }
 
     /**
@@ -263,7 +259,7 @@ EOT
         if ($options->lightbox == 'lightbox') {
             $this->requireAsset('javascript', 'prettyPhoto');
             $this->requireAsset('css', 'prettyPhoto');
-        } elseif ($options->lightbox == 'intense'){
+        } elseif ($options->lightbox == 'intense') {
             $this->requireAsset('javascript', 'intense');
         }
     }
@@ -351,7 +347,7 @@ EOT
         $options['autoPlay'] = isset($args['autoPlay']) ? 1 : 0;
         // Encoding
         $args['options'] = json_encode($options);
-        if(is_array($args['fID'])) {
+        if (is_array($args['fID'])) {
             $args['fIDs'] = implode(',', $args['fID']);
             $this->generatePlaceHolderFromArray($args['fID']);
         }
@@ -368,20 +364,20 @@ EOT
      */
     public function hex2rgb($hex)
     {
-       $hex = str_replace('#', '', $hex);
+        $hex = str_replace('#', '', $hex);
 
-       if (strlen($hex) == 3) {
-          $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-          $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-          $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-       } else {
-          $r = hexdec(substr($hex, 0, 2));
-          $g = hexdec(substr($hex, 2, 2));
-          $b = hexdec(substr($hex, 4, 2));
-       }
-       $rgb = array($r, $g, $b);
+        if (strlen($hex) == 3) {
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+        } else {
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+        }
+        $rgb = array($r, $g, $b);
 
-       return implode(',', $rgb);
+        return implode(',', $rgb);
     }
 
     /**
@@ -423,6 +419,15 @@ EOT
             // Destroy image
             imagedestroy($img);
         }
+    }
+
+    protected function configureEdit()
+    {
+        $app = Application::getFacadeApplication();
+        $this->setAssetEdit();
+        $this->set('fileSets', $this->getFileSetList());
+        $this->set('options', $this->getOptionsJson());
+        $this->set('token', $app->make('token'));
     }
 
     /**
