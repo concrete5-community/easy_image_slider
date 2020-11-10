@@ -17,10 +17,12 @@ $options = $controller->getOptionsJson();
 <div class="row">
     <div id="tab-content-settings" class="ccm-ui col-md-12 options-content">
         <table class="grouping">
-            <th><?php echo $form->label($view->field('items'), t('Items to show')) ?></th>
-            <th><?php echo $form->label($view->field('margin'), t('margin between items')) ?></th>
-            <th><?php echo $form->label($view->field('slideSpeed'), t('Slide Speed')) ?></th>
-            <th><?php echo $form->label($view->field('autoPlay'), t('Auto Play')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('items'), t('Items to show')) ?></th>
+                <th><?php echo $form->label($view->field('margin'), t('margin between items')) ?></th>
+                <th><?php echo $form->label($view->field('slideSpeed'), t('Slide Speed')) ?></th>
+                <th><?php echo $form->label($view->field('autoPlay'), t('Auto Play')) ?></th>
+            </tr>
             <tr>
                 <td>
                     <div class="input-group form-group form-group-small">
