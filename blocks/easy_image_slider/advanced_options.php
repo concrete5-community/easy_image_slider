@@ -9,11 +9,9 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $view
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $this
  * @var Concrete\Core\Form\Service\Form $form
+ * @var stdClass $options
  */
 
-// In Composer conditions, it seems that the 'options' variables are overide after the inc() function
-// So i need to set some variable here... Don't know why ?
-$options = $controller->getOptionsJson();
 $color = new Color();
 ?>
 <div class="row">

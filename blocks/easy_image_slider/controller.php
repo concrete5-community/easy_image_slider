@@ -25,7 +25,14 @@ class Controller extends BlockController
      *
      * @see \Concrete\Core\Block\BlockController::$btInterfaceWidth
      */
-    protected $btInterfaceWidth = '600';
+    protected $btInterfaceWidth = 600;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::$btInterfaceHeight
+     */
+    protected $btInterfaceHeight = 465;
 
     /**
      * {@inheritdoc}
@@ -33,13 +40,6 @@ class Controller extends BlockController
      * @see \Concrete\Core\Block\BlockController::$btWrapperClass
      */
     protected $btWrapperClass = 'ccm-ui';
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Block\BlockController::$btInterfaceHeight
-     */
-    protected $btInterfaceHeight = '465';
 
     /**
      * {@inheritdoc}
@@ -97,7 +97,15 @@ class Controller extends BlockController
      */
     protected $btDefaultSet = 'multimedia';
 
-    protected $optionTabs = array();
+    /**
+     * @var string|null
+     */
+    protected $fIDs;
+
+    /**
+     * @var string|null
+     */
+    protected $options;
 
     /**
      * {@inheritdoc}
@@ -122,19 +130,19 @@ class Controller extends BlockController
     public function add()
     {
         $this->configureEdit();
+        $this->set('fDetails', array());
     }
 
     public function edit()
     {
         $this->configureEdit();
-        $fIDs = $this->getFilesIds();
-        $this->set('fIDs', $fIDs);
-        $this->set('fDetails', $this->getFilesDetails($fIDs));
+        $this->set('fDetails', $this->getFilesDetails($this->getFilesIds()));
     }
 
     public function composer()
     {
         $this->configureEdit();
+        $this->set('fDetails', $this->getFilesDetails($this->getFilesIds()));
         $this->addHeaderItem(
             <<<'EOT'
 ?>
@@ -148,92 +156,13 @@ class Controller extends BlockController
 </style>
 EOT
         );
-        $this->set('fDetails', $this->getFilesDetails($this->getFilesIds()));
     }
 
     /**
-     * @return \stdClass
-     */
-    public function getOptionsJson()
-    {
-        // Cette fonction retourne un objet option
-        // SI le block n'existe pas encore, ces options sont préréglées
-        // Si il existe on transfome la chaine de charactère en json
-        if ($this->isValueEmpty()) {
-            $options = new stdClass();
-            $options->lightbox = 0;
-            $options->items = 4;
-            $options->ItemsTitle = 1;
-            $options->ItemsDescription = 0;
-            $options->lightboxTitle = 1;
-            $options->lightboxDescription = 0;
-            $options->fancyOverlay = '#f0f0f0';
-            $options->infoBg = '#0C99D5';
-            $options->fadingColor = '';
-            $options->fancyOverlayAlpha = .9;
-            $options->imageLink = 0;
-            $options->navigation = 1;
-            $options->navigationPrev = '<i class="fa fa-arrow-circle-left"></i> ' . t('Prev');
-            $options->navigationNext = t('Next') . ' <i class="fa fa-arrow-circle-right"></i>';
-            $options->slideSpeed = 300;
-            $options->autoPlay = 0;
-            $options->autoPlayTime = 5000;
-            $options->itemsScaleUp = 0;
-            $options->navRewind = 1;
-            $options->margin = 5;
-            $options->isTransparent = 0;
-            $options->responsiveContainer = 0;
-            $options->loop = 0;
-            $options->center = 0;
-            $options->dots = 1;
-            $options->nav = 0;
-            $options->lazy = 0;
-
-            return $options;
-        }
-        $options = json_decode($this->options);
-        $options->isSingleItemSlide = $options->items == 1;
-        // legacy
-        // if(!isset($options->fancyOverlay)) $options->fancyOverlay = '#f0f0f0';
-        // end legacy
-
-        return $options;
-    }
-
-    /**
-     * @param int[] $fIDs
+     * {@inheritdoc}
      *
-     * @return \stdClass[]
+     * @see \Concrete\Core\Block\BlockController::registerViewAssets()
      */
-    public function getFilesDetails($fIDs)
-    {
-        $tools = new Tools();
-        $fDetails = array();
-        foreach ($fIDs as $fID) {
-            $f = $this->getFileFromFileID($fID);
-            if ($f !== null) {
-                $fDetails[] = $tools->buildFileDetails($f);
-            }
-        }
-
-        return $fDetails;
-    }
-
-    /**
-     * @param int|mixed $fID
-     *
-     * @return \Concrete\Core\File\File|null
-     */
-    public function getFileFromFileID($fID)
-    {
-        if (!$fID) {
-            return null;
-        }
-        $f = File::getByID($fID);
-
-        return is_object($f) && !$f->isError() ? $f : null;
-    }
-
     public function registerViewAssets($outputContent = '')
     {
         $this->requireAsset('css', 'easy-slider-view');
@@ -243,7 +172,7 @@ EOT
         $this->requireAsset('javascript', 'owl-carousel');
         $this->requireAsset('css', 'owl-theme');
         $this->requireAsset('css', 'owl-carousel');
-//      $this->requireAsset('css','animate');
+        // $this->requireAsset('css','animate');
     }
 
     public function view()
@@ -251,7 +180,6 @@ EOT
         $options = $this->getOptionsJson();
         // Files
         $files = $this->getFiles();
-        $this->set('fIDs', $this->getFilesIds());
         $this->set('files', $files);
         $this->set('options', $options);
         $this->generatePlaceHolderFromArray($files);
@@ -262,55 +190,6 @@ EOT
         } elseif ($options->lightbox == 'intense') {
             $this->requireAsset('javascript', 'intense');
         }
-    }
-
-    /**
-     * @return \Concrete\Core\File\Set\Set[]
-     */
-    public function getFileSetList()
-    {
-        $fs = new FileSetList();
-
-        return $fs->get();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValueEmpty()
-    {
-        return $this->getFilesIds() === array();
-    }
-
-    public function setAssetEdit()
-    {
-        $this->requireAsset('core/file-manager');
-        $this->requireAsset('css', 'core/file-manager');
-        $this->requireAsset('css', 'jquery/ui');
-
-        $this->requireAsset('javascript', 'bootstrap/dropdown');
-        $this->requireAsset('javascript', 'bootstrap/tooltip');
-        $this->requireAsset('javascript', 'bootstrap/popover');
-        $this->requireAsset('javascript', 'jquery/ui');
-        $this->requireAsset('javascript', 'core/events');
-        $this->requireAsset('javascript', 'underscore');
-        $this->requireAsset('javascript', 'core/app');
-        $this->requireAsset('javascript', 'bootstrap-editable');
-        $this->requireAsset('css', 'core/app/editable-fields');
-
-        $this->requireAsset('javascript', 'knob');
-        $this->requireAsset('javascript', 'easy-slider-edit');
-        $this->requireAsset('css', 'easy-slider-edit');
-        $this->set('optionTabs', $this->getOptionTabs);
-    }
-
-    public function getOptionTabs()
-    {
-        return array(
-            array('handle' => 'settings', 'name' => t('Settings'), 'icon' => 'fa-cogs'),
-            array('handle' => 'lightbox', 'name' => t('Lightbox'), 'icon' => 'fa-picture-o'),
-            array('handle' => 'advanced', 'name' => t('Advanced'), 'icon' => 'fa-flash'),
-        );
     }
 
     public function save($args)
@@ -364,7 +243,7 @@ EOT
      */
     public function hex2rgb($hex)
     {
-        $hex = str_replace('#', '', $hex);
+        $hex = str_replace('#', '', (string) $hex);
 
         if (strlen($hex) == 3) {
             $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
@@ -383,13 +262,13 @@ EOT
     /**
      * @param int[]|\Concrete\Core\File\File[] $array
      */
-    public function generatePlaceHolderFromArray($array)
+    private function generatePlaceHolderFromArray($array)
     {
         $placeholderMaxSize = 600;
         if (empty($array)) {
             $files = array();
         } elseif (!is_object($array[0])) {
-            $files = array_map(array($this, 'getFileFromFileID'), $array);
+            $files = array_values(array_filter(array_map(array($this, 'getFileFromFileID'), $array)));
         } else {
             $files = $array;
         }
@@ -421,7 +300,108 @@ EOT
         }
     }
 
-    protected function configureEdit()
+    /**
+     * @return \Concrete\Core\File\Set\Set[]
+     */
+    private function getFileSetList()
+    {
+        $fs = new FileSetList();
+
+        return $fs->get();
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function getOptionsJson()
+    {
+        // Cette fonction retourne un objet option
+        // SI le block n'existe pas encore, ces options sont préréglées
+        // Si il existe on transfome la chaine de charactère en json
+        if ($this->isValueEmpty()) {
+            $options = new stdClass();
+            $options->lightbox = 0;
+            $options->items = 4;
+            $options->ItemsTitle = 1;
+            $options->ItemsDescription = 0;
+            $options->lightboxTitle = 1;
+            $options->lightboxDescription = 0;
+            $options->fancyOverlay = '#f0f0f0';
+            $options->infoBg = '#0C99D5';
+            $options->fadingColor = '';
+            $options->fancyOverlayAlpha = .9;
+            $options->imageLink = 0;
+            $options->navigation = 1;
+            $options->navigationPrev = '<i class="fa fa-arrow-circle-left"></i> ' . t('Prev');
+            $options->navigationNext = t('Next') . ' <i class="fa fa-arrow-circle-right"></i>';
+            $options->slideSpeed = 300;
+            $options->autoPlay = 0;
+            $options->autoPlayTime = 5000;
+            $options->itemsScaleUp = 0;
+            $options->navRewind = 1;
+            $options->margin = 5;
+            $options->isTransparent = 0;
+            $options->responsiveContainer = 0;
+            $options->loop = 0;
+            $options->center = 0;
+            $options->dots = 1;
+            $options->nav = 0;
+            $options->lazy = 0;
+
+            return $options;
+        }
+        $options = json_decode($this->options);
+        $options->isSingleItemSlide = $options->items == 1;
+        // legacy
+        // if(!isset($options->fancyOverlay)) $options->fancyOverlay = '#f0f0f0';
+        // end legacy
+
+        return $options;
+    }
+
+    /**
+     * @param int[] $fIDs
+     *
+     * @return \stdClass[]
+     */
+    private function getFilesDetails($fIDs)
+    {
+        $tools = new Tools();
+        $fDetails = array();
+        foreach ($fIDs as $fID) {
+            $f = $this->getFileFromFileID($fID);
+            if ($f !== null) {
+                $fDetails[] = $tools->buildFileDetails($f);
+            }
+        }
+
+        return $fDetails;
+    }
+
+    /**
+     * @param int|mixed $fID
+     *
+     * @return \Concrete\Core\File\File|null
+     */
+    private function getFileFromFileID($fID)
+    {
+        if (!$fID) {
+            return null;
+        }
+        $f = File::getByID($fID);
+
+        return is_object($f) && !$f->isError() ? $f : null;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isValueEmpty()
+    {
+        return $this->getFilesIds() === array();
+    }
+
+    private function configureEdit()
     {
         $app = Application::getFacadeApplication();
         $this->setAssetEdit();
@@ -430,10 +410,31 @@ EOT
         $this->set('token', $app->make('token'));
     }
 
+    private function setAssetEdit()
+    {
+        $this->requireAsset('core/file-manager');
+        $this->requireAsset('css', 'core/file-manager');
+        $this->requireAsset('css', 'jquery/ui');
+
+        $this->requireAsset('javascript', 'bootstrap/dropdown');
+        $this->requireAsset('javascript', 'bootstrap/tooltip');
+        $this->requireAsset('javascript', 'bootstrap/popover');
+        $this->requireAsset('javascript', 'jquery/ui');
+        $this->requireAsset('javascript', 'core/events');
+        $this->requireAsset('javascript', 'underscore');
+        $this->requireAsset('javascript', 'core/app');
+        $this->requireAsset('javascript', 'bootstrap-editable');
+        $this->requireAsset('css', 'core/app/editable-fields');
+
+        $this->requireAsset('javascript', 'knob');
+        $this->requireAsset('javascript', 'easy-slider-edit');
+        $this->requireAsset('css', 'easy-slider-edit');
+    }
+
     /**
      * @return int[]
      */
-    protected function getFilesIds()
+    private function getFilesIds()
     {
         return array_values( // Reset array indexes
             array_filter( // Remove zeroes

@@ -8,9 +8,17 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\File\Set\Set[] $fileSets
  * @var EasyImageSlider\FileDetails[] $fDetails
+ * @var stdClass $options
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var bool|null $isComposer (may be unset)
  */
+
+$optionTabs = array(
+    array('handle' => 'settings', 'name' => t('Settings'), 'icon' => 'fa-cogs'),
+    array('handle' => 'lightbox', 'name' => t('Lightbox'), 'icon' => 'fa-picture-o'),
+    array('handle' => 'advanced', 'name' => t('Advanced'), 'icon' => 'fa-flash'),
+);
+
 ?>
 
 <ul id="" class="ccm-inline-toolbar ccm-ui easy-image-toolbar">
@@ -38,7 +46,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
         ?>
     </li>
     <?php
-    foreach ($controller->getOptionTabs() as $value) {
+    foreach ($optionTabs as $value) {
         ?>
         <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-options">
             <button id="<?php echo $value['handle'] ?>-button" type="button" class="btn btn-mini option-button" rel="tab-content-<?php echo $value['handle'] ?>"><i class="fa fa-lg <?php echo $value['icon'] ?>"></i> <?php echo $value['name'] ?></button>
@@ -59,7 +67,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
     }
     ?>
  </ul>
-<?php $this->inc('advanced_options.php', array('view' => $view, 'options' => $controller->getOptionsJson(), 'form' => $form)); ?>
+<?php $this->inc('advanced_options.php', array('view' => $view, 'options' => $options, 'form' => $form)); ?>
 <div class="slides-form-wrapper ccm-ui">
     <div class="easy_slide-items"></div>
 </div>
