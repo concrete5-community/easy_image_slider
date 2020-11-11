@@ -210,7 +210,7 @@ EOT
             $this->generatePlaceHolderFromArray($args['fID']);
         }
         parent::save(array(
-            'options' => Options::fromUI($args),
+            'options' => json_encode(Options::fromUI($args)),
             'fIDs' => $fIDs,
         ));
     }
