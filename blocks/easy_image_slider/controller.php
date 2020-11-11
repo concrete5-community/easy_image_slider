@@ -319,6 +319,7 @@ EOT
         $this->set('fileSets', $this->getFileSetList());
         $this->set('options', $this->getOptions());
         $this->set('token', $app->make('token'));
+        $this->set('urlManager', $app->make('url/manager'));
     }
 
     private function setAssetEdit()

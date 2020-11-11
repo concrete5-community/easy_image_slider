@@ -10,6 +10,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var EasyImageSlider\FileDetails[] $fDetails
  * @var EasyImageSlider\Options $options
  * @var Concrete\Core\Validation\CSRF\Token $token
+ * @var Concrete\Core\Url\Resolver\Manager\ResolverManager $urlManager
  * @var bool|null $isComposer (may be unset)
  */
 
@@ -102,7 +103,7 @@ $optionTabs = array(
                     </table>
                     <a href="javascript:;" class="remove-item"><i class="fa fa-remove"></i></a>
                     <div class="item-controls">
-                        <a class="dialog-launch item-properties" dialog-modal="true" dialog-width="600" dialog-height="400" dialog-title="Properties" href="<?php echo URL::to('/ccm/system/dialogs/file/properties') ?>?fID=<%= fID %>"><i class="fa fa-gear"></i></a>
+                        <a class="dialog-launch item-properties" dialog-modal="true" dialog-width="600" dialog-height="400" dialog-title="Properties" href="<?php echo h($urlManager->resolve(array('/ccm/system/dialogs/file/properties'))) ?>?fID=<%= fID %>"><i class="fa fa-gear"></i></a>
                         <a class="handle"><i class="fa fa-arrows"></i></a>
                         <input type="text" name="image_bg_color[]" value="<%= image_bg_color %>" id="ccm-colorpicker-bg-<%= fID %>" />
                     </div>
@@ -121,10 +122,10 @@ $optionTabs = array(
     </div>
 </script>
 <script>
-    var CCM_EDITOR_SECURITY_TOKEN = "<?php echo $token->generate('editor') ?>";
-    var getFileDetailDetailJson = '<?php echo URL::to('/easyimageslider/tools/getfiledetails') ?>';
-    var saveFieldURL = '<?php echo URL::to('/easyimageslider/tools/savefield') ?>';
-    var getFilesetImagesURL = '<?php echo URL::to('/easyimageslider/tools/getfilesetimages') ?>';
+    var CCM_EDITOR_SECURITY_TOKEN = <?php echo json_encode($token->generate('editor')) ?>;
+    var getFileDetailDetailJson = <?php echo json_encode((string) $urlManager->resolve(array('/easyimageslider/tools/getfiledetails'))) ?>;
+    var saveFieldURL = <?php echo json_encode((string) $urlManager->resolve(array('/easyimageslider/tools/savefield'))) ?>;
+    var getFilesetImagesURL = <?php echo json_encode((string) $urlManager->resolve(array('/easyimageslider/tools/getfilesetimages'))) ?>;
 
     var manager = easy_slide_manager($('.easy_slide-items'));
 
