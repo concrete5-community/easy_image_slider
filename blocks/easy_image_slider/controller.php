@@ -212,7 +212,7 @@ EOT
         foreach ($fIDs as $fID) {
             $f = $this->getFileFromFileID($fID);
             if ($f !== null) {
-                $fDetails[] = $tools->getFileDetails($f);
+                $fDetails[] = $tools->buildFileDetails($f);
             }
         }
 

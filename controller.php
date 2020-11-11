@@ -81,8 +81,8 @@ class Controller extends Package
     public function registerRoutes()
     {
         Route::register('/easyimageslider/tools/savefield', 'EasyImageSlider\Tools::save');
-        Route::register('/easyimageslider/tools/getfilesetimages', 'EasyImageSlider\Tools::getFileSetImage');
-        Route::register('/easyimageslider/tools/getfiledetailsjson', 'EasyImageSlider\Tools::getFileDetailsJson');
+        Route::register('/easyimageslider/tools/getfilesetimages', 'EasyImageSlider\Tools::getFileSetImages');
+        Route::register('/easyimageslider/tools/getfiledetails', 'EasyImageSlider\Tools::getFileDetailsJson');
     }
 
     /**

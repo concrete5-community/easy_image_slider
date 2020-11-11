@@ -3,109 +3,182 @@
 namespace EasyImageSlider;
 
 use Concrete\Core\Controller\Controller as RouteController;
-use Concrete\Core\File\EditResponse as FileEditResponse;
+use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
+use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\File\Set\Set as FileSet;
+use Concrete\Core\Http\Response;
 use Concrete\Core\Permission\Checker;
-use Loader;
-use stdClass;
+use Concrete\Core\Support\Facade\Application;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+defined('C5_EXECUTE') or die('Access Denied.');
 
 class Tools extends RouteController
 {
+    /**
+     * @var \Concrete\Core\Application\Application
+     */
+    protected $app;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->app = Application::getFacadeApplication();
+    }
+
+    /**
+     * Endpoint of the /easyimageslider/tools/savefield route.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function save()
     {
-        $this->file = File::getByID($_REQUEST['fID']);
-        $fp = new Checker($this->file);
-        if ($fp->canEditFileProperties()) {
-            $fv = $this->file->getVersionToModify();
-
-            $value = $_REQUEST['value'];
-            switch ($_REQUEST['name']) {
-                case 'fvTitle':
-                    $fv->updateTitle($value);
-                    break;
-                case 'fvDescription':
-                    $fv->updateDescription($value);
-                    break;
-                case 'fvTags':
-                    $fv->updateTags($value);
-                    break;
-                default:
-                    // Save a attribute
-                    $fv->setAttribute($_REQUEST['name'], $value);
-            }
-
-            $sr = new FileEditResponse();
-            $sr->setFile($this->file);
-            $sr->setMessage(t('File updated successfully.'));
-            $sr->setAdditionalDataAttribute('value', $value);
-            $sr->outputJSON();
-        } else {
-            throw new \Exception(t('Access Denied.'));
+        $file = $this->getFile();
+        if ($file === null) {
+            return $this->buildFailureReponse(t('File Not Found.'));
         }
-        die();
+        $fp = new Checker($file);
+        if (!$fp->canEditFileProperties()) {
+            return $this->buildFailureReponse(t('Accedd Denied.'));
+        }
+        $fv = $this->file->getVersionToModify();
+        $name = (string) $this->request->request->get('name', $this->request->query->get('name'));
+        $value = (string) $this->request->request->get('value', $this->request->query->get('value'));
+        switch ($name) {
+            case 'fvTitle':
+                $fv->updateTitle($value);
+                break;
+            case 'fvDescription':
+                $fv->updateDescription($value);
+                break;
+            case 'fvTags':
+                $fv->updateTags($value);
+                break;
+            default:
+                $fv->setAttribute($name, $value);
+                break;
+        }
+
+        $sr = new EditResponse();
+        $sr->setFile($this->file);
+        $sr->setMessage(t('File updated successfully.'));
+        $sr->setAdditionalDataAttribute('value', $value);
+
+        return $this->buildSuccessResponse($sr);
     }
 
-    public function getFileSetImage()
+    /**
+     * Endpoint of the /easyimageslider/tools/getfilesetimages route.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getFileSetImages()
     {
-        // $fs = new SetList()->get();
-        // Loader::helper('ajax')->sendResult(
-        // die('coucou');
-        $fs = FileSet::getByID((int) ($_REQUEST['fsID']));
-        if (is_object($fs)) {
-            $fsf = $fs->getFiles();
+        $fsID = $this->request->request->get('fsID', $this->request->query->get('fsID'));
+        $valn = $this->app->make('helper/validation/numbers');
+        $fs = $valn->integer($fsID) && $fsID > 0 ? FileSet::getByID($fsID) : null;
+        if ($fs === null) {
+            return $this->buildFailureReponse(t('Unable to find the requested file set.'));
         }
-        // print_r($fsf);
-        if (count($fsf)) {
-            foreach ($fsf as $key => $f) {
-                $fd = $this->getFileDetails($f);
-                if ($fd) {
-                    $files[] = $fd;
-                }
-            }
-            Loader::helper('ajax')->sendResult($files);
+        $detailList = array();
+        foreach ($fs->getFiles() as $file) {
+            $detailList[] = $this->buildFileDetails($file);
         }
+
+        return $this->buildSuccessResponse($detailList);
     }
 
-    public function getFileThumbnailUrl($f = null)
+    /**
+     * Endpoint of the /easyimageslider/tools/getfiledetails route.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getFileDetails()
     {
-        if (!$f && $_REQUEST['fID']) {
-            $f = File::getByID($_REQUEST['fID']);
+        $file = $this->getFile();
+        if ($file === null) {
+            return $this->buildFailureReponse(t('File Not Found.'));
         }
+        $details = $this->buildFileDetails($file);
 
-        $type = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle('file_manager_detail');
-        if ($type != null) {
-            return $f->getThumbnailURL($type->getBaseVersion());
-        }
-
-        return false;
+        return $this->buildSuccessResponse($details);
     }
 
-    public function getFileDetails($f = null)
+    /**
+     * @param \Concrete\Core\File\File $file
+     *
+     * @return \EasyImageSlider\FileDetails
+     */
+    public function buildFileDetails($file)
     {
-        if (!$f && $_REQUEST['fID']) {
-            $f = File::getByID($_REQUEST['fID']);
-        }
-
-        $o = new stdClass();
-        if (!is_object($f)) {
-            return false;
-        }
-        $o->urlInline = $this->getFileThumbnailUrl($f);
-        $o->title = $f->getTitle();
-        $o->description = $f->getDescription();
-        $o->fID = $f->getFileID();
-        $o->type = $f->getVersionToModify()->getGenericTypeText();
-        $o->image_thumbnail_width = $f->getAttribute('image_thumbnail_width') ? $f->getAttribute('image_thumbnail_width') : '';
-        $o->image_link = $f->getAttribute('image_link') ? $f->getAttribute('image_link') : '';
-        $o->image_link_text = $f->getAttribute('image_link_text') ? $f->getAttribute('image_link_text') : '';
-        $o->image_bg_color = $f->getAttribute('image_bg_color') ? $f->getAttribute('image_bg_color') : ''; // '#ffffff';
+        $o = new FileDetails();
+        $o->urlInline = $this->buildFileThumbnailUrl($file);
+        $o->title = (string) $file->getTitle();
+        $o->description = (string) $file->getDescription();
+        $o->fID = (int) $file->getFileID();
+        $o->type = (string) $file->getVersionToModify()->getGenericTypeText();
+        $w = (int) $file->getAttribute('image_thumbnail_width');
+        $o->image_thumbnail_width = $w > 0 ? $w : null;
+        $o->image_link = (string) $file->getAttribute('image_link');
+        $o->image_link_text = (string) $file->getAttribute('image_link_text');
+        $o->image_bg_color = (string) $file->getAttribute('image_bg_color');
 
         return $o;
     }
 
-    public function getFileDetailsJson()
+    /**
+     * @return \Concrete\Core\File\File|null
+     */
+    protected function getFile()
     {
-        Loader::helper('ajax')->sendResult($this->getFileDetails());
+        $fID = $this->request->request->get('fID', $this->request->query->get('fID'));
+        $valn = $this->app->make('helper/validation/numbers');
+        if (!$valn->integer($fID) || $fID < 1) {
+            return null;
+        }
+
+        return File::getByID($fID);
+    }
+
+    /**
+     * @param mixed $data
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    protected function buildSuccessResponse($data)
+    {
+        return new JsonResponse($data);
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return \Concrete\Core\Http\Response
+     */
+    protected function buildFailureReponse($message)
+    {
+        return new Response(
+            (string) $message,
+            400,
+            array(
+                'Content-Type' => 'text/plain; charset=' . APP_CHARSET,
+            )
+        );
+    }
+
+    /**
+     * @param \Concrete\Core\File\File $file
+     *
+     * @return string
+     */
+    protected function buildFileThumbnailUrl($file)
+    {
+        $type = Type::getByHandle('file_manager_detail');
+        if ($type === null) {
+            return '';
+        }
+
+        return (string) $file->getThumbnailURL($type->getBaseVersion());
     }
 }

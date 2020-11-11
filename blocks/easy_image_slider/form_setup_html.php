@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Package\EasyImageSlider\Block\EasyImageSlider\Controller $controller
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\File\Set\Set[] $fileSets
- * @var stdClass[] $fDetails
+ * @var EasyImageSlider\FileDetails[] $fDetails
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var bool|null $isComposer (may be unset)
  */
@@ -114,7 +114,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 </script>
 <script>
     var CCM_EDITOR_SECURITY_TOKEN = "<?php echo $token->generate('editor') ?>";
-    var getFileDetailDetailJson = '<?php echo URL::to('/easyimageslider/tools/getfiledetailsjson') ?>';
+    var getFileDetailDetailJson = '<?php echo URL::to('/easyimageslider/tools/getfiledetails') ?>';
     var saveFieldURL = '<?php echo URL::to('/easyimageslider/tools/savefield') ?>';
     var getFilesetImagesURL = '<?php echo URL::to('/easyimageslider/tools/getfilesetimages') ?>';
 
