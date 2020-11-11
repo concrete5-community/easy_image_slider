@@ -160,7 +160,7 @@ class Tools extends RouteController
     {
         return new Response(
             (string) $message,
-            400,
+            Response::HTTP_BAD_REQUEST,
             array(
                 'Content-Type' => 'text/plain; charset=' . APP_CHARSET,
             )
