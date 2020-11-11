@@ -112,7 +112,7 @@ $color = new Color();
         </table>
         -->
         <div class="footer">
-            <button class="btn btn-primary easy_image_options_close" type="button" id=""><?php echo t('Close') ?></button>
+            <button class="btn btn-primary easy_image_options_close" type="button"><?php echo t('Close') ?></button>
         </div>
     </div>
 </div>
@@ -150,7 +150,7 @@ $color = new Color();
             </tr>
         </table>
         <div class="footer">
-            <button class="btn btn-primary easy_image_options_close" type="button" id=""><?php echo t('Close') ?></button>
+            <button class="btn btn-primary easy_image_options_close" type="button"><?php echo t('Close') ?></button>
         </div>
     </div>
 </div>
@@ -219,7 +219,7 @@ $color = new Color();
         </table>
         -->
         <div class="footer">
-            <button class="btn btn-primary easy_image_options_close" type="button" id=""><?php echo t('Close') ?></button>
+            <button class="btn btn-primary easy_image_options_close" type="button"><?php echo t('Close') ?></button>
         </div>
     </div>
 </div>
