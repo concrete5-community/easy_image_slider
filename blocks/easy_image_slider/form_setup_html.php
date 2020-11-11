@@ -22,7 +22,7 @@ $optionTabs = array(
 
 ?>
 
-<ul id="" class="ccm-inline-toolbar ccm-ui easy-image-toolbar">
+<ul class="ccm-inline-toolbar ccm-ui easy-image-toolbar">
     <li class="ccm-sub-toolbar-text-cell">
         <?php
         if (!empty($fileSets)) {
@@ -56,13 +56,13 @@ $optionTabs = array(
     }
     ?>
     <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-cancel">
-        <button onclick="cancelBlockForm()" id="" type="button" class="btn btn-mini"><?php echo t('Cancel') ?></button>
+        <button id="easy_image_cancel" type="button" class="btn btn-mini"><?php echo t('Cancel') ?></button>
     </li>
     <?php
     if (empty($isComposer)) {
         ?>
         <li class="ccm-inline-toolbar-button ccm-inline-toolbar-button-save">
-            <button onclick="submitBlockForm()" class="btn btn-primary" type="button" id="easy_image_save"><?php echo $controller->getTask() === 'add' ? t('Add Gallery') : t('Update Gallery')  ?></button>
+            <button class="btn btn-primary" type="button" id="easy_image_save"><?php echo $controller->getTask() === 'add' ? t('Add Gallery') : t('Update Gallery')  ?></button>
         </li>
         <?php
     }
@@ -122,30 +122,39 @@ $optionTabs = array(
     </div>
 </script>
 <script>
-    var CCM_EDITOR_SECURITY_TOKEN = <?php echo json_encode($token->generate('editor')) ?>;
-    var getFileDetailDetailJson = <?php echo json_encode((string) $urlManager->resolve(array('/easyimageslider/tools/getfiledetails'))) ?>;
-    var saveFieldURL = <?php echo json_encode((string) $urlManager->resolve(array('/easyimageslider/tools/savefield'))) ?>;
-    var getFilesetImagesURL = <?php echo json_encode((string) $urlManager->resolve(array('/easyimageslider/tools/getfilesetimages'))) ?>;
+(function() {
+window.CCM_EDITOR_SECURITY_TOKEN = <?php echo json_encode($token->generate('editor')) ?>;
 
-    var manager = easy_slide_manager($('.easy_slide-items'));
-
-    ccmi18n.filesetAlreadyPicked = "<?php echo t('This Fileset have been already picked, are you sure to add images again ?') ?>";
-    ccmi18n.confirmDeleteImage = "<?php echo t('Are you sure to delete this image?') ?>";
-    ccmi18n.imageOnly = "<?php echo t('You must select an image file only'); ?>";
-    ccmi18n.imageSize = "<?php echo t('Please upload a smaller image, max size is 6 MB') ?>";
-    <?php
-    if (!empty($fDetails)) {
-        ?>
-        $(document).ready(function() {
-            <?php
-            foreach ($fDetails as $f) {
-                ?>
-                fillSlideTemplate(<?php echo json_encode($f) ?>);
-                <?php
-            }
-            ?>
-        });
-        <?php
-    }
+var manager = new EasySlideManager(
+    $('.easy_slide-items'),
+    <?php echo json_encode(array(
+        'getFileDetailDetailUrl' => (string) $urlManager->resolve(array('/easyimageslider/tools/getfiledetails')),
+        'saveFieldURL' => (string) $urlManager->resolve(array('/easyimageslider/tools/savefield')),
+        'getFilesetImagesURL' => (string) $urlManager->resolve(array('/easyimageslider/tools/getfilesetimages')),
+        'i18n' => array(
+            'filesetAlreadyPicked' => t('This Fileset have been already picked, are you sure to add images again ?'),
+            'confirmDeleteImage' => t('Are you sure to delete this image?'),
+            'imageOnly' => t('You must select an image file only'),
+            'imageSize' => t('Please upload a smaller image, max size is 6 MB'),
+            'none' => t('None'),
+        ),
+    )) ?>
+);
+<?php
+if (!empty($fDetails)) {
     ?>
+    $(document).ready(function() {
+        <?php
+        foreach ($fDetails as $f) {
+            ?>
+            manager.fillSlideTemplate(<?php echo json_encode($f) ?>);
+            <?php
+        }
+        ?>
+    });
+    <?php
+}
+?>
+
+})();
 </script>
