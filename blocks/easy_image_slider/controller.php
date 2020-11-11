@@ -304,12 +304,7 @@ EOT
      */
     private function getFileFromFileID($fID)
     {
-        if (!$fID) {
-            return null;
-        }
-        $f = File::getByID($fID);
-
-        return is_object($f) && !$f->isError() ? $f : null;
+        return $fID ? File::getByID($fID) : null;
     }
 
     private function configureEdit()
