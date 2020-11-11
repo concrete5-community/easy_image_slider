@@ -1,7 +1,5 @@
 <?php
 
-use EasyImageSlider;
-
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**

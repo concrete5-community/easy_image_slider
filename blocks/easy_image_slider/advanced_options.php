@@ -58,8 +58,10 @@ $color = new Color();
         </table>
         <!-- table.grouping>th*2+tr>td*2 -->
         <table class="grouping">
-            <th><?php echo $form->label($view->field('ItemsTitle'), t('Items Title')) ?></th>
-            <th><?php echo $form->label($view->field('ItemsDescription'), t('Items Description')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('ItemsTitle'), t('Items Title')) ?></th>
+                <th><?php echo $form->label($view->field('ItemsDescription'), t('Items Description')) ?></th>
+            </tr>
             <tr>
                 <td>
                     <input type="radio" name="<?php echo $view->field('ItemsTitle') ?>" value="1" <?php echo $options->ItemsTitle ? 'checked' : '' ?>> <?php echo t('Yes') ?>
@@ -74,9 +76,11 @@ $color = new Color();
             </tr>
         </table>
         <table class="grouping">
-            <th><?php echo $form->label($view->field('infoBg'), t('Info Box on Hover')) ?></th>
-            <th><?php echo $form->label($view->field('fadingColor'), t('Gallery Background Color')) ?></th>
-            <th><?php echo $form->label($view->field('isTransparent'), t('Color Transitions')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('infoBg'), t('Info Box on Hover')) ?></th>
+                <th><?php echo $form->label($view->field('fadingColor'), t('Gallery Background Color')) ?></th>
+                <th><?php echo $form->label($view->field('isTransparent'), t('Color Transitions')) ?></th>
+            </tr>
             <tr>
                 <td>
                     <?php $color->output($view->field('infoBg'), $options->infoBg, array('preferredFormat' => 'rgba')) ?>
@@ -119,16 +123,20 @@ $color = new Color();
             <?php echo $form->select($view->field('lightbox'), array('' => t('None'), 'intense' => t('Full Screen'), 'lightbox' => t('Simple Lightbox')), $options->lightbox, array('style' => 'width:180px')) ?>
         </div>
         <table class="grouping">
-            <th><?php echo $form->label($view->field('fancyOverlay'), t('Lightbox overlay color')) ?></th>
-            <th><?php echo $form->label($view->field('fancyOverlayAlpha'), t('Lightbox overlay opacity (from 0 to 1)')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('fancyOverlay'), t('Lightbox overlay color')) ?></th>
+                <th><?php echo $form->label($view->field('fancyOverlayAlpha'), t('Lightbox overlay opacity (from 0 to 1)')) ?></th>
+            </tr>
             <tr>
                 <td><?php $color->output($view->field('fancyOverlay'), $options->fancyOverlay, array('preferredFormat' => 'rgba')) ?></td>
                 <td><?php echo $form->text($view->field('fancyOverlayAlpha'), $options->fancyOverlayAlpha) ?></td>
             </tr>
         </table>
         <table class="grouping">
-            <th><?php echo $form->label($view->field('lightboxTitle'), t('Display Title in Lightbox')) ?></th>
-            <th><?php echo $form->label($view->field('lightboxDescription'), t('Display Description in Lightbox')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('lightboxTitle'), t('Display Title in Lightbox')) ?></th>
+                <th><?php echo $form->label($view->field('lightboxDescription'), t('Display Description in Lightbox')) ?></th>
+            </tr>
             <tr>
                 <td>
                     <input type="radio" name="<?php echo $view->field('lightboxTitle') ?>" value="1" <?php echo $options->lightboxTitle ? 'checked' : '' ?>> <?php echo t('Yes') ?>
@@ -149,9 +157,11 @@ $color = new Color();
 <div class="row">
     <div id="tab-content-advanced" class="ccm-ui col-md-12 options-content">
         <table class="grouping">
-            <th><?php echo $form->label($view->field('dots'), t('Dots Navigation')) ?></th>
-            <th><?php echo $form->label($view->field('navigation'), t('Navigation + Navigation text')) ?></th>
-            <th><?php echo $form->label($view->field('loop'), t('Loop Navigation')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('dots'), t('Dots Navigation')) ?></th>
+                <th><?php echo $form->label($view->field('navigation'), t('Navigation + Navigation text')) ?></th>
+                <th><?php echo $form->label($view->field('loop'), t('Loop Navigation')) ?></th>
+            </tr>
             <tr>
                 <td>
                     <input type="radio" name="<?php echo $view->field('dots') ?>" value="1" <?php echo $options->dots ? 'checked' : '' ?>> <?php echo t('Yes') ?>
@@ -174,8 +184,10 @@ $color = new Color();
             </tr>
         </table>
         <table class="grouping">
-            <th><?php echo $form->label($view->field('responsiveContainer'), t('Responsive Container')) ?></th>
-            <th><?php echo $form->label($view->field('lazy'), t('Lazy Loading')) ?></th>
+            <tr>
+                <th><?php echo $form->label($view->field('responsiveContainer'), t('Responsive Container')) ?></th>
+                <th><?php echo $form->label($view->field('lazy'), t('Lazy Loading')) ?></th>
+            </tr>
             <tr>
                 <td>
                     <input type="radio" name="<?php echo $view->field('responsiveContainer') ?>" value="1" <?php echo $options->responsiveContainer ? 'checked' : '' ?>> <?php echo t('Yes') ?>
