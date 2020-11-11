@@ -10,6 +10,9 @@ use Concrete\Core\File\Set\SetList as FileSetList;
 use Concrete\Core\Support\Facade\Application;
 use EasyImageSlider\Options;
 use EasyImageSlider\Tools;
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+use Imagine\Image\Palette\RGB;
 
 class Controller extends BlockController
 {
@@ -232,6 +235,9 @@ EOT
         if (!is_dir($placeholderDir)) {
             mkdir($placeholderDir, 0755);
         }
+        $imagine = new Imagine();
+        $rgb = new RGB();
+        $backgroundColor = $rgb->color(array(0x00, 0x00, 0x00), 13);
         foreach ($files as $f) {
             if (!is_object($f)) {
                 continue;
@@ -244,12 +250,8 @@ EOT
             }
             $new_width = $placeholderMaxSize;
             $new_height = floor($h * ($placeholderMaxSize / $w));
-            $img = imagecreatetruecolor($new_width, $new_height);
-            imagesavealpha($img, true);
-            $color = imagecolorallocatealpha($img, 0x00, 0x00, 0x00, 110);
-            imagefill($img, 0, 0, $color);
-            imagepng($img, $placeholderFile);
-            imagedestroy($img);
+            $image = $imagine->create(new Box($new_width, $new_height), $backgroundColor);
+            $image->save($placeholderFile, array('format' => 'PNG'));
         }
     }
 
