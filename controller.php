@@ -94,7 +94,7 @@ class Controller extends Package
     {
         Route::register('/easyimageslider/tools/savefield', 'EasyImageSlider\Tools::save');
         Route::register('/easyimageslider/tools/getfilesetimages', 'EasyImageSlider\Tools::getFileSetImages');
-        Route::register('/easyimageslider/tools/getfiledetails', 'EasyImageSlider\Tools::getFileDetailsJson');
+        Route::register('/easyimageslider/tools/getfiledetails', 'EasyImageSlider\Tools::getFileDetails');
     }
 
     private function registerAssets()
