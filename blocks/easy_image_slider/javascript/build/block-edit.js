@@ -74,7 +74,7 @@ function EasySlideManager(sliderEntriesContainer, options) {
             try {
                 message = $.parseJSON(message).errors.join('<br/>');
             } catch(e) {}
-            ConcreteAlert.dialog('Error', message);
+            ConcreteAlert.dialog(my.options.i18n.error, message);
         },
         stop: function() {
             my.isFirstFile = true;
@@ -157,22 +157,22 @@ EasySlideManager.prototype = {
             event.preventDefault();
             var Launcher = $obj;
             ConcreteFileManager.launchDialog(function(data) {
-                // data : Object {fID: "1"}
+                // data : Object {fID: '1'}
                 $.get(
                     my.options.getFileDetailDetailUrl,
                     {
                         fID: data.fID
                     },
                     function(file) {
-                        if (file.type === "Image") {
+                        if (file.type === 'Image') {
                             $.fn.dialog.hideLoader();
                             my.fillSlideTemplate(file, Launcher);
-                           // On ajoute un nouvel element vide a coté
+                            // On ajoute un nouvel element vide a coté
                             my.fillSlideTemplate();
                             return;
                         }
                         $.fn.dialog.hideLoader();
-                        alert('You must select an image file only');
+						alert(my.options.i18n.imageOnly);
                     },
                     'json'
                 );
@@ -213,7 +213,7 @@ EasySlideManager.prototype = {
         if ($element) {
             //  on est dans le cas ou l'utilisateur a uploadé ou choisi un fichier
             // dans ce cas on replace le carré vide par un element rempli avec image et tout le toutim
-           newSlide = $element.replaceWithPush(this._templateSlide(defaults));
+            newSlide = $element.replaceWithPush(this._templateSlide(defaults));
         } else {
             // On ajoute un nouveau avec ou sans infos
             this.sliderEntriesContainer.append(this._templateSlide(defaults));
@@ -247,7 +247,7 @@ EasySlideManager.prototype = {
     },
     initImageEdit: function($obj, file) {
         var my = this;
-        $obj.find(".dialog-launch").dialog();
+        $obj.find('.dialog-launch').dialog();
         $obj.find('.editable-click').editable({
             ajaxOptions: {dataType: 'json'},
             emptytext: my.options.i18n.none,
@@ -267,12 +267,12 @@ EasySlideManager.prototype = {
         var editor = $obj.find('#ccm-colorpicker-bg-' + file.fID);
         editor.spectrum({
             appendTo: $obj,
-            className: "ccm-widget-colorpicker",
+            className: 'ccm-widget-colorpicker',
             showButtons: true,
             showInitial: true,
             showInput: true,
             allowEmpty: true,
-            preferredFormat: "rgba",
+            preferredFormat: 'rgba',
             showAlpha: false,
             change: function(color) {
                 my.saveFileAttribute(file.fID, 'image_bg_color', color.toHexString());
@@ -283,7 +283,7 @@ EasySlideManager.prototype = {
         // Deplacer le carré vide à la dernière place
         $('.slide-item').not('.filled').appendTo(this.sliderEntriesContainer);
         // On permet la réorganisation
-        this.sliderEntriesContainer.sortable({handle: ".handle"});
+        this.sliderEntriesContainer.sortable({handle: '.handle'});
         // On regarde si on desactive ou pas le bouton submit
         // en comptant les carré rempli d'image
         if(!$('.slide-item.filled').size()) {

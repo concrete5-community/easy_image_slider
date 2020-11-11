@@ -137,6 +137,7 @@ var manager = new EasySlideManager(
             'imageOnly' => t('You must select an image file only'),
             'imageSize' => t('Please upload a smaller image, max size is 6 MB'),
             'none' => t('None'),
+            'error' => t('Error'),
         ),
     )) ?>
 );
