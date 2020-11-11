@@ -225,30 +225,30 @@ EOT
         } else {
             $files = $array;
         }
+        if ($files === array()) {
+            return;
+        }
+        $placeholderDir = __DIR__ . '/images/placeholders';
+        if (!is_dir($placeholderDir)) {
+            mkdir($placeholderDir, 0755);
+        }
         foreach ($files as $f) {
             if (!is_object($f)) {
                 continue;
             }
             $w = $f->getAttribute('width');
             $h = $f->getAttribute('height');
-            $new_width = $placeholderMaxSize;
-            $new_height = floor($h * ($placeholderMaxSize / $w));
-
-            $placeholderFile = __DIR__ . "/images/placeholders/placeholder-{$w}-{$h}.png";
+            $placeholderFile = $placeholderDir . "/placeholder-{$w}-{$h}.png";
             if (file_exists($placeholderFile)) {
                 continue;
             }
+            $new_width = $placeholderMaxSize;
+            $new_height = floor($h * ($placeholderMaxSize / $w));
             $img = imagecreatetruecolor($new_width, $new_height);
             imagesavealpha($img, true);
-
-            // Fill the image with transparent color
             $color = imagecolorallocatealpha($img, 0x00, 0x00, 0x00, 110);
             imagefill($img, 0, 0, $color);
-
-            // Save the image to file.png
             imagepng($img, $placeholderFile);
-
-            // Destroy image
             imagedestroy($img);
         }
     }
