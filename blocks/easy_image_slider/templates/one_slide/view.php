@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $this
  * @var EasyImageSlider\Options $options
  * @var int|string $bID
- * @var array $files
+ * @var Concrete\Core\File\File[] $files
  */
 
 $c = Page::getCurrentPage();
