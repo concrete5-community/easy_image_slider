@@ -3,7 +3,7 @@
 defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
- * @var stdClass $options
+ * @var EasyImageSlider\Options $options
  * @var int|string $bID
  */
 
@@ -12,25 +12,28 @@ defined('C5_EXECUTE') or die('Access Denied.');
 $(document).ready(function(){
     $('#easy-slider-wrapper-<?php echo $bID ?>').data('colorbg');
     <?php
-    if ($options->lightbox == 'lightbox') {
-        ?>
-        $("#easy-slider-<?php echo $bID ?> a[rel^='prettyPhoto']").prettyPhoto({
-            theme: 'pp_default',
-            changepicturecallback: function() {
-                // 1024px is presumed here to be the widest mobile device. Adjust at will.
-                if ($('body').innerWidth() < 1025) {
-                    $(".pp_pic_holder.pp_default").css("top",window.pageYOffset+"px");
+    switch ($options->lightbox) {
+        case 'lightbox':
+            ?>
+            $("#easy-slider-<?php echo $bID ?> a[rel^='prettyPhoto']").prettyPhoto({
+                theme: 'pp_default',
+                changepicturecallback: function() {
+                    // 1024px is presumed here to be the widest mobile device. Adjust at will.
+                    if ($('body').innerWidth() < 1025) {
+                        $(".pp_pic_holder.pp_default").css("top",window.pageYOffset+"px");
+                    }
                 }
-            }
-        });
-        <?php
-    } elseif ($options->lightbox == 'intense') {
-        ?>
-        $('#easy-slider-<?php echo $bID ?> a').click(function(e) {
-            e.preventDefault();
-        });
-        Intense($('#easy-slider-<?php echo $bID ?> a'));
-        <?php
+            });
+            <?php
+            break;
+        case 'intense':
+            ?>
+            $('#easy-slider-<?php echo $bID ?> a').click(function(e) {
+                e.preventDefault();
+            });
+            Intense($('#easy-slider-<?php echo $bID ?> a'));
+            <?php
+            break;
     }
     ?>
     /* -- OWL Carousel -- */
@@ -42,7 +45,7 @@ $(document).ready(function(){
         rewindNav : <?php echo $options->loop ? 'true' : 'false' ?>,
         // -- Single Item
         <?php
-        if ($options->isSingleItemSlide) {
+        if ($options->isSingleItemSlide()) {
             ?>
             singleItem:true,
             <?php
@@ -55,7 +58,7 @@ $(document).ready(function(){
         pagination : <?php echo $options->dots ? 'true' : 'false' ?>,
         navigation: <?php echo $options->nav ? 'true' : 'false' ?>,
         navContainer : "#owl-navigation-<?php echo $bID ?>",
-        navigationText : ['<?php echo $options->navigationPrev ?>', '<?php echo $options->navigationNext ?>']
+        navigationText : [<?php echo json_encode($options->navigationPrev) ?>, <?php echo json_encode($options->navigationNext) ?>]
     });
     function sliderOnChange() {
         $('#easy-slider-<?php echo $bID ?> .item').removeClass('active');

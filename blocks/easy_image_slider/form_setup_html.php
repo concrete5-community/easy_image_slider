@@ -8,7 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Form\Service\Form $form
  * @var Concrete\Core\File\Set\Set[] $fileSets
  * @var EasyImageSlider\FileDetails[] $fDetails
- * @var stdClass $options
+ * @var EasyImageSlider\Options $options
  * @var Concrete\Core\Validation\CSRF\Token $token
  * @var bool|null $isComposer (may be unset)
  */

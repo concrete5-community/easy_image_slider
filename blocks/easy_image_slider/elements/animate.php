@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  */
 
 ?>
-<option value="0"><?php echo t('None') ?></option>
+<option value=""><?php echo t('None') ?></option>
 <optgroup label="Attention Seekers">
     <option value="bounce" <?php echo $option == 'bounce' ? 'selected' : '' ?>><?php echo t('bounce') ?></option>
     <option value="flash" <?php echo $option == 'flash' ? 'selected' : '' ?>><?php echo t('flash') ?></option>

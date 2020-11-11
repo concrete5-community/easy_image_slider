@@ -9,7 +9,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $view
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $this
  * @var Concrete\Core\Form\Service\Form $form
- * @var stdClass $options
+ * @var EasyImageSlider\Options $options
  */
 
 $color = new Color();
@@ -62,13 +62,13 @@ $color = new Color();
             <th><?php echo $form->label($view->field('ItemsDescription'), t('Items Description')) ?></th>
             <tr>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('ItemsTitle') ?>" value="1" <?php echo $options->ItemsTitle == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('ItemsTitle') ?>" value="0" <?php echo $options->ItemsTitle == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('ItemsTitle') ?>" value="1" <?php echo $options->ItemsTitle ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('ItemsTitle') ?>" value="0" <?php echo $options->ItemsTitle ? '' : 'checked' ?>> <?php echo t('No') ?>
                     <small><?php echo t('(On some Templates)') ?></small>
                 </td>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('ItemsDescription') ?>" value="1" <?php echo $options->ItemsDescription == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('ItemsDescription') ?>" value="0" <?php echo $options->ItemsDescription == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('ItemsDescription') ?>" value="1" <?php echo $options->ItemsDescription ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('ItemsDescription') ?>" value="0" <?php echo $options->ItemsDescription ? '' : 'checked' ?>> <?php echo t('No') ?>
                     <small><?php echo t('(On some Templates)') ?></small>
                 </td>
             </tr>
@@ -87,8 +87,8 @@ $color = new Color();
                     <small><?php echo t('This settings is overrided by items colors') ?></small>
                 </td>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('isTransparent') ?>" value="1" <?php echo $options->isTransparent == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('isTransparent') ?>" value="0" <?php echo $options->isTransparent == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('isTransparent') ?>" value="1" <?php echo $options->isTransparent ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('isTransparent') ?>" value="0" <?php echo $options->isTransparent ? '' : 'checked' ?>> <?php echo t('No') ?>
                     <small><?php echo t('Enable if you want cool colors <br /> transitions on single slides') ?></small>
                 </td>
             </tr>
@@ -116,7 +116,7 @@ $color = new Color();
     <div id="tab-content-lightbox" class="ccm-ui col-md-12 options-content">
         <div class="form-group">
             <?php echo $form->label($view->field('lightbox'), t('Lightbox')) ?>
-            <?php echo $form->select($view->field('lightbox'), array('0' => t('None'), 'intense' => t('Full Screen'), 'lightbox' => t('Simple Lightbox')), $options->lightbox, array('style' => 'width:180px')) ?>
+            <?php echo $form->select($view->field('lightbox'), array('' => t('None'), 'intense' => t('Full Screen'), 'lightbox' => t('Simple Lightbox')), $options->lightbox, array('style' => 'width:180px')) ?>
         </div>
         <table class="grouping">
             <th><?php echo $form->label($view->field('fancyOverlay'), t('Lightbox overlay color')) ?></th>
@@ -131,12 +131,12 @@ $color = new Color();
             <th><?php echo $form->label($view->field('lightboxDescription'), t('Display Description in Lightbox')) ?></th>
             <tr>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('lightboxTitle') ?>" value="1" <?php echo $options->lightboxTitle == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('lightboxTitle') ?>" value="0" <?php echo $options->lightboxTitle == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('lightboxTitle') ?>" value="1" <?php echo $options->lightboxTitle ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('lightboxTitle') ?>" value="0" <?php echo $options->lightboxTitle ? '' : 'checked' ?>> <?php echo t('No') ?>
                 </td>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('lightboxDescription') ?>" value="1" <?php echo $options->lightboxDescription == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('lightboxDescription') ?>" value="0" <?php echo $options->lightboxDescription == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('lightboxDescription') ?>" value="1" <?php echo $options->lightboxDescription ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('lightboxDescription') ?>" value="0" <?php echo $options->lightboxDescription ? '' : 'checked' ?>> <?php echo t('No') ?>
                     <small><?php echo t('Only with full screen') ?></small>
                 </td>
             </tr>
@@ -154,8 +154,8 @@ $color = new Color();
             <th><?php echo $form->label($view->field('loop'), t('Loop Navigation')) ?></th>
             <tr>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('dots') ?>" value="1" <?php echo $options->dots == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('dots') ?>" value="0" <?php echo $options->dots == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('dots') ?>" value="1" <?php echo $options->dots ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('dots') ?>" value="0" <?php echo $options->dots ? '' : 'checked' ?>> <?php echo t('No') ?>
                 </td>
                 <td>
                     <div class="input-group form-group">
@@ -168,8 +168,8 @@ $color = new Color();
                     </div>
                 </td>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('loop') ?>" value="1" <?php echo $options->loop == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('loop') ?>" value="0" <?php echo $options->loop == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('loop') ?>" value="1" <?php echo $options->loop ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('loop') ?>" value="0" <?php echo $options->loop ? '' : 'checked' ?>> <?php echo t('No') ?>
                 </td>
             </tr>
         </table>
@@ -178,13 +178,13 @@ $color = new Color();
             <th><?php echo $form->label($view->field('lazy'), t('Lazy Loading')) ?></th>
             <tr>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('responsiveContainer') ?>" value="1" <?php echo $options->responsiveContainer == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('responsiveContainer') ?>" value="0" <?php echo $options->responsiveContainer == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('responsiveContainer') ?>" value="1" <?php echo $options->responsiveContainer ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('responsiveContainer') ?>" value="0" <?php echo $options->responsiveContainer ? '' : 'checked' ?>> <?php echo t('No') ?>
                     <small><?php echo t('Disable if you want to see <br /> a full width gallery. Otherwise it respect <br/> the width of bootstrap container ') ?></small>
                 </td>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('lazy') ?>" value="1" <?php echo $options->lazy == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('lazy') ?>" value="0" <?php echo $options->lazy == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('lazy') ?>" value="1" <?php echo $options->lazy ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('lazy') ?>" value="0" <?php echo $options->lazy ? '' : 'checked' ?>> <?php echo t('No') ?>
                 </td>
             </tr>
         </table>
@@ -194,13 +194,13 @@ $color = new Color();
             <th><?php echo $form->label($view->field('itemsScaleUp'), t('Item Scale Up')) ?></th>
             <tr>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('center') ?>" value="1" <?php echo $options->center == 1 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('center') ?>" value="0" <?php echo $options->center == 0 ? 'checked' : '' ?>> <?php echo t('No') ?>
+                    <input type="radio" name="<?php echo $view->field('center') ?>" value="1" <?php echo $options->center ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('center') ?>" value="0" <?php echo $options->center ? '' : 'checked' ?>> <?php echo t('No') ?>
                     <small><?php echo t('(Center item. Works well with even an odd number of items.)') ?></small>
                 </td>
                 <td>
-                    <input type="radio" name="<?php echo $view->field('itemsScaleUp') ?>" value="0" <?php echo $options->itemsScaleUp == 0 ? 'checked' : '' ?>> <?php echo t('Yes') ?>
-                    <input type="radio" name="<?php echo $view->field('itemsScaleUp') ?>" value="1" <?php echo $options->itemsScaleUp == 1 ? 'checked' : '' ?>> <?php echo t('Not') ?>
+                    <input type="radio" name="<?php echo $view->field('itemsScaleUp') ?>" value="0" <?php echo $options->itemsScaleUp ? 'checked' : '' ?>> <?php echo t('Yes') ?>
+                    <input type="radio" name="<?php echo $view->field('itemsScaleUp') ?>" value="1" <?php echo $options->itemsScaleUp ? '' : 'checked' ?>> <?php echo t('Not') ?>
                     <small><?php echo t('Stretch items when it is less than the supplied items') ?></small>
                 </td>
             </tr>

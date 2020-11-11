@@ -7,7 +7,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $this
- * @var stdClass $options
+ * @var EasyImageSlider\Options $options
  * @var int|string $bID
  * @var array $files
  */
@@ -26,16 +26,16 @@ if ($c->isEditMode()) {
     $firstWrapperBg = $options->isTransparent ? ($firstFile->getAttribute('image_bg_color') ? $firstFile->getAttribute('image_bg_color') : $options->fadingColor) : $options->fadingColor;
     $galleryHasImage = false;
     ?>
-    <div class="easy-slider easy-slider-one <?php echo $options->isSingleItemSlide ? 'easy-slider-single' : '' ?>" id="easy-slider-wrapper-<?php echo $bID ?>" style="background-color:<?php echo $firstWrapperBg ?>" data-colorbg="<?php echo $options->fadingColor ?>">
+    <div class="easy-slider easy-slider-one <?php echo $options->isSingleItemSlide() ? 'easy-slider-single' : '' ?>" id="easy-slider-wrapper-<?php echo $bID ?>" style="background-color:<?php echo $firstWrapperBg ?>" data-colorbg="<?php echo $options->fadingColor ?>">
         <div class="easy-slider-carousel-inner <?php echo $options->responsiveContainer ? 'responsive-container' : '' ?>" id="easy-slider-<?php echo $bID ?>">
             <?php
             foreach ($files as $key => $f) {
                 $galleryHasImage = true;
                 // Different Thumbnails sizes
-                $thumbnailUrl = $options->isSingleItemSlide ? $f->getRelativePath() : $f->getThumbnailURL($type->getBaseVersion());
+                $thumbnailUrl = $options->isSingleItemSlide() ? $f->getRelativePath() : $f->getThumbnailURL($type->getBaseVersion());
                 // Due to a bug in OWL2 Lazy work only with loop activated.
                 $placeHolderUrl = $options->lazy ? ($this->getBlockURL() . "/images/placeholders/placeholder-{$f->getAttribute('width')}-{$f->getAttribute('height')}.png") : $thumbnailUrl;
-                $retinaThumbnailUrl = $options->isSingleItemSlide ? $f->getRelativePath() : $f->getThumbnailURL($type->getDoubledVersion());
+                $retinaThumbnailUrl = $options->isSingleItemSlide() ? $f->getRelativePath() : $f->getThumbnailURL($type->getDoubledVersion());
                 // Styles for color on hover
                 $thumbnailBackground = $options->isTransparent ? 'background-color:transparent' : ('background-color:' . ($f->getAttribute('image_bg_color') ? $f->getAttribute('image_bg_color') : $options->fadingColor) . ';');
                 // Full image infos
@@ -47,7 +47,7 @@ if ($c->isEditMode()) {
                 ?>
                 <div class="item" id="item-<?php echo $key ?>" style="<?php echo $thumbnailBackground ?>" <?php if ($f->getAttribute('image_bg_color')) { ?>data-color="<?php echo $f->getAttribute('image_bg_color') ?><?php } ?>">
                     <?php
-                    if ($options->lightbox && !$linkUrl) {
+                    if ($options->lightbox !== '' && !$linkUrl) {
                         echo '<a href="', h($fullUrl), '" data-image="', h($fullUrl), '"';
                         if ($options->lightboxTitle) {
                             echo ' title="', h('<b>' . $f->getTitle() . '</b>');
@@ -87,7 +87,7 @@ if ($c->isEditMode()) {
                         </div>
                         <?php
                     }
-                    if ($options->lightbox && !$linkUrl) {
+                    if ($options->lightbox !== '' && !$linkUrl) {
                         echo '</a>';
                     }
                     ?>

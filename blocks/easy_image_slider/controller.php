@@ -8,8 +8,8 @@ use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\SetList as FileSetList;
 use Concrete\Core\Support\Facade\Application;
+use EasyImageSlider\Options;
 use EasyImageSlider\Tools;
-use stdClass;
 
 class Controller extends BlockController
 {
@@ -108,6 +108,11 @@ class Controller extends BlockController
     protected $options;
 
     /**
+     * @var array|null
+     */
+    private $decodedOptions;
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Block\BlockController::getBlockTypeDescription()
@@ -168,95 +173,43 @@ EOT
         $this->requireAsset('css', 'easy-slider-view');
         $this->requireAsset('javascript', 'jquery');
         $this->requireAsset('css', 'font-awesome');
-
         $this->requireAsset('javascript', 'owl-carousel');
         $this->requireAsset('css', 'owl-theme');
         $this->requireAsset('css', 'owl-carousel');
         // $this->requireAsset('css','animate');
+        $options = $this->getOptions();
+        switch ($options->lightbox) {
+            case 'lightbox':
+                $this->requireAsset('javascript', 'prettyPhoto');
+                $this->requireAsset('css', 'prettyPhoto');
+                break;
+            case 'intense':
+                $this->requireAsset('javascript', 'intense');
+                break;
+        }
     }
 
     public function view()
     {
-        $options = $this->getOptionsJson();
-        // Files
         $files = $this->getFiles();
         $this->set('files', $files);
-        $this->set('options', $options);
+        $this->set('options', $this->getOptions());
         $this->generatePlaceHolderFromArray($files);
-        // Lightbox
-        if ($options->lightbox == 'lightbox') {
-            $this->requireAsset('javascript', 'prettyPhoto');
-            $this->requireAsset('css', 'prettyPhoto');
-        } elseif ($options->lightbox == 'intense') {
-            $this->requireAsset('javascript', 'intense');
-        }
     }
 
     public function save($args)
     {
-        $options = $args;
-        unset($options['fID']);
-        // Numeric checking
-        if (!is_numeric($options['fancyOverlayAlpha']) || $options['fancyOverlayAlpha'] > 1 || $options['fancyOverlayAlpha'] < 0) {
-            $options['fancyOverlayAlpha'] = .9;
+        if (!is_array($args)) {
+            $args = array();
         }
-        if (!is_numeric($options['slideSpeed']) || $options['slideSpeed'] > 3000 || $options['slideSpeed'] < 0) {
-            $options['slideSpeed'] = 200;
-        }
-        if (!is_numeric($options['autoPlayTime']) || $options['autoPlayTime'] > 50000 || $options['autoPlayTime'] < 0) {
-            $options['autoPlayTime'] = 5000;
-        }
-        if (!is_numeric($options['items']) || $options['items'] > 20 || $options['items'] < 0) {
-            $options['items'] = 4;
-        }
-        if (!is_numeric($options['margin']) || $options['margin'] > 20 || $options['margin'] < 0) {
-            $options['margin'] = 5;
-        }
-        // Text inputs too long
-        /*
-        if (count_chars($options['navigationPrev']) > 20 ) {
-            $options['navigationPrev'] = t('Prev');
-        }
-        if (count_chars($options['navigationNext']) > 20 ) {
-            $options['navigationNext'] = t('Next');
-        }
-         */
-        // Checkboxes
-        $options['nav'] = isset($args['nav']) ? 1 : 0;
-        $options['autoPlay'] = isset($args['autoPlay']) ? 1 : 0;
-        // Encoding
-        $args['options'] = json_encode($options);
-        if (is_array($args['fID'])) {
-            $args['fIDs'] = implode(',', $args['fID']);
+        $fIDs = empty($args['fID']) || !is_array($args['fID']) ? '' : implode(',', $args['fID']);
+        if ($fIDs !== '') {
             $this->generatePlaceHolderFromArray($args['fID']);
         }
-
-        parent::save($args);
-    }
-
-    /**
-     * Returns the rgb values separated by commas.
-     *
-     * @param string $hex
-     *
-     * @return string
-     */
-    public function hex2rgb($hex)
-    {
-        $hex = str_replace('#', '', (string) $hex);
-
-        if (strlen($hex) == 3) {
-            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-        } else {
-            $r = hexdec(substr($hex, 0, 2));
-            $g = hexdec(substr($hex, 2, 2));
-            $b = hexdec(substr($hex, 4, 2));
-        }
-        $rgb = array($r, $g, $b);
-
-        return implode(',', $rgb);
+        parent::save(array(
+            'options' => Options::fromUI($args),
+            'fIDs' => $fIDs,
+        ));
     }
 
     /**
@@ -311,58 +264,24 @@ EOT
     }
 
     /**
-     * @return \stdClass
+     * @return \EasyImageSlider\Options
      */
-    private function getOptionsJson()
+    private function getOptions()
     {
-        // Cette fonction retourne un objet option
-        // SI le block n'existe pas encore, ces options sont préréglées
-        // Si il existe on transfome la chaine de charactère en json
-        if ($this->isValueEmpty()) {
-            $options = new stdClass();
-            $options->lightbox = 0;
-            $options->items = 4;
-            $options->ItemsTitle = 1;
-            $options->ItemsDescription = 0;
-            $options->lightboxTitle = 1;
-            $options->lightboxDescription = 0;
-            $options->fancyOverlay = '#f0f0f0';
-            $options->infoBg = '#0C99D5';
-            $options->fadingColor = '';
-            $options->fancyOverlayAlpha = .9;
-            $options->imageLink = 0;
-            $options->navigation = 1;
-            $options->navigationPrev = '<i class="fa fa-arrow-circle-left"></i> ' . t('Prev');
-            $options->navigationNext = t('Next') . ' <i class="fa fa-arrow-circle-right"></i>';
-            $options->slideSpeed = 300;
-            $options->autoPlay = 0;
-            $options->autoPlayTime = 5000;
-            $options->itemsScaleUp = 0;
-            $options->navRewind = 1;
-            $options->margin = 5;
-            $options->isTransparent = 0;
-            $options->responsiveContainer = 0;
-            $options->loop = 0;
-            $options->center = 0;
-            $options->dots = 1;
-            $options->nav = 0;
-            $options->lazy = 0;
-
-            return $options;
+        if ($this->decodedOptions === null || $this->decodedOptions[0] !== $this->options) {
+            $this->decodedOptions = array(
+                $this->options,
+                Options::fromJSON($this->options),
+            );
         }
-        $options = json_decode($this->options);
-        $options->isSingleItemSlide = $options->items == 1;
-        // legacy
-        // if(!isset($options->fancyOverlay)) $options->fancyOverlay = '#f0f0f0';
-        // end legacy
 
-        return $options;
+        return $this->decodedOptions[1];
     }
 
     /**
      * @param int[] $fIDs
      *
-     * @return \stdClass[]
+     * @return \EasyImageSlider\FileDetails[]
      */
     private function getFilesDetails($fIDs)
     {
@@ -393,20 +312,12 @@ EOT
         return is_object($f) && !$f->isError() ? $f : null;
     }
 
-    /**
-     * @return bool
-     */
-    private function isValueEmpty()
-    {
-        return $this->getFilesIds() === array();
-    }
-
     private function configureEdit()
     {
         $app = Application::getFacadeApplication();
         $this->setAssetEdit();
         $this->set('fileSets', $this->getFileSetList());
-        $this->set('options', $this->getOptionsJson());
+        $this->set('options', $this->getOptions());
         $this->set('token', $app->make('token'));
     }
 

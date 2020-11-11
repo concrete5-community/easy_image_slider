@@ -4,18 +4,18 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $this
- * @var stdClass $options
+ * @var EasyImageSlider\Options $options
  * @var int|string $bID
  */
 
 ?>
 <style>
 body .fancybox-overlay {
-    background-color: rgba(<?php echo $this->controller->hex2rgb($options->fancyOverlay) ?>, <?php echo $options->fancyOverlayAlpha ?>);
+    background-color: <?php echo $options->getFancyOverlayCSSColor() ?>;
 }
 #easy-slider-wrapper-<?php echo $bID ?>.easy-slider-carousel .item {
     background-color:<?php echo $options->isTransparent ? 'transparent' : $options->fadingColor ?>;
-    margin: 0 <?php echo $options->isSingleItemSlide ? '0' : $options->margin ?>px;
+    margin: 0 <?php echo $options->isSingleItemSlide() ? '0' : $options->margin ?>px;
 }
 #easy-slider-wrapper-<?php echo $bID ?>.easy-slider-carousel .info > div {
     background-color:<?php echo $options->infoBg ?>;
