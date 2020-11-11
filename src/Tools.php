@@ -42,7 +42,7 @@ class Tools extends RouteController
         if (!$fp->canEditFileProperties()) {
             return $this->buildFailureReponse(t('Accedd Denied.'));
         }
-        $fv = $this->file->getVersionToModify();
+        $fv = $file->getVersionToModify();
         $name = (string) $this->request->request->get('name', $this->request->query->get('name'));
         $value = (string) $this->request->request->get('value', $this->request->query->get('value'));
         switch ($name) {
@@ -61,7 +61,7 @@ class Tools extends RouteController
         }
 
         $sr = new EditResponse();
-        $sr->setFile($this->file);
+        $sr->setFile($file);
         $sr->setMessage(t('File updated successfully.'));
         $sr->setAdditionalDataAttribute('value', $value);
 
