@@ -25,27 +25,27 @@ $color = new Color();
             </tr>
             <tr>
                 <td>
-                    <div class="input-group form-group form-group-small">
+                    <div class="input-group input-group-sm form-group form-group-small">
                         <?php echo $form->text($view->field('items'), $options->items) ?>
                         <span class="input-group-addon"> <?php echo t('items') ?> </span>
                     </div>
                     <small><?php echo t('The maximum amount of items displayed<br />at a time with the widest browser width') ?></small>
                 </td>
                 <td>
-                    <div class="input-group form-group form-group-small">
+                    <div class="input-group input-group-sm form-group form-group-small">
                         <?php echo $form->text($view->field('margin'), $options->margin, array('placeholder' => t('5'))) ?>
                         <span class="input-group-addon"> px </span>
                     </div>
                     <small><?php echo t('0 for no margins') ?></small>
                 </td>
                 <td>
-                    <div class="input-group form-group form-group-small">
+                    <div class="input-group input-group-sm form-group form-group-small">
                         <?php echo $form->text($view->field('slideSpeed'), $options->slideSpeed) ?>
                         <span class="input-group-addon"> ms </span>
                     </div>
                 </td>
                 <td>
-                    <div class="input-group form-group form-group-middle">
+                    <div class="input-group input-group-sm form-group form-group-middle">
                         <span class="input-group-addon">
                             <?php echo $form->checkbox($view->field('autoPlay'), '1', $options->autoPlay) ?>
                         </span>
@@ -168,7 +168,7 @@ $color = new Color();
                     <input type="radio" name="<?php echo $view->field('dots') ?>" value="0" <?php echo $options->dots ? '' : 'checked' ?>> <?php echo t('No') ?>
                 </td>
                 <td>
-                    <div class="input-group form-group">
+                    <div class="input-group input-group-sm form-group">
                         <span class="input-group-addon">
                             <?php echo $form->checkbox($view->field('nav'), '1', $options->nav) ?>
                         </span>
