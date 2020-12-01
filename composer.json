@@ -1,0 +1,40 @@
+{
+    "name": "concrete5-community/easy_image_slider",
+    "description": "Easy Slider is a touch enabled block that lets you create beautiful responsive carousel slider",
+    "type": "concrete5-package",
+    "keywords": [
+        "concrete5",
+        "package",
+        "addon",
+        "slider",
+        "touch",
+        "carousel"
+    ],
+    "homepage": "https://github.com/concrete5-community/easy_image_slider",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jacqmin Sébastien",
+            "email": "seb@tellthem.be",
+            "role": "original author"
+        },
+        {
+            "name": "Michele Locati",
+            "email": "michele@locati.it",
+            "role": "maintainer",
+            "homepage": "https://mlocati.github.io"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/concrete5-community/easy_image_slider/issues",
+        "source": "https://github.com/concrete5-community/easy_image_slider"
+    },
+    "require": {
+        "concrete5/core": "^5.7.5.2 || ^8",
+        "php": ">=5.3.3"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
