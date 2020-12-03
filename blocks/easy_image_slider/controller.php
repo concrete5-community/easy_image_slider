@@ -5,10 +5,10 @@ defined('C5_EXECUTE') or die("Access Denied.");
 
 use Concrete\Core\Block\BlockController;
 use Loader;
-// use Asset;
-// use AssetList;
-// use \Concrete\Core\Http\ResponseAssetGroup;
-// use Permissions;
+use Asset;
+use AssetList;
+use \Concrete\Core\Http\ResponseAssetGroup;
+use Permissions;
 
 use File;
 use FileSet;
@@ -127,7 +127,7 @@ class Controller extends BlockController
         if ($fID) return File::getByID($fID);    
     }
 
-    public function registerViewAssets($outputContent = '')
+    public function registerViewAssets()
     {
         $this->requireAsset('css','easy-slider-view');        
         $this->requireAsset('javascript', 'jquery');
