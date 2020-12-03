@@ -4,7 +4,7 @@
 
 This add-on has been originally developed by Jacqmin Sébastien ([@myconcretelab](https://github.com/myconcretelab/)).
 
-Since 2020-11-30, he has been so kind to [release it under the MIT license](https://github.com/concrete5-comunity/easy_image_slider/commit/25ccb0e5417cf2bf3cd6e77ce94cf86430bba523).
+Since 2020-11-30, he has been so kind to [release it under the MIT license](https://github.com/concrete5-community/easy_image_slider/commit/25ccb0e5417cf2bf3cd6e77ce94cf86430bba523).
 
 After that, we moved the package under the concrete5-community umbrella, so that this package can be managed by a community instead of a single person.
 
