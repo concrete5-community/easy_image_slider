@@ -1,4 +1,4 @@
-<?php 
+<?php  
 namespace Concrete\Package\EasyImageSlider\Block\EasyImageSlider;
 
 defined('C5_EXECUTE') or die("Access Denied.");

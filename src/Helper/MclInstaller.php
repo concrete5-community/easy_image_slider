@@ -1,5 +1,5 @@
 <?php 
-namespace Concrete\Package\ThemeAnitya\Helper;
+namespace Concrete\Package\EasyImageSlider\Src\Helper;
 defined('C5_EXECUTE') or die(_("Access Denied."));
 
 use Page;
@@ -106,7 +106,7 @@ class MclInstaller
                 if (is_object($pkg)) {
                     if (!BlockType::getByHandle((string) $bt['handle']))
                         BlockType::installBlockTypeFromPackage((string) $bt['handle'], $pkg);
-                } 
+                }
             }
         }
     }
@@ -157,7 +157,7 @@ class MclInstaller
             foreach ($sx->thumbnailtypes->thumbnailtype as $l) {
                 $thumbtype = \Concrete\Core\File\Image\Thumbnail\Type\Type::getByHandle((string) $l['handle']);
                 if (is_object($thumbtype)) continue;
-                
+
                 $type = new \Concrete\Core\File\Image\Thumbnail\Type\Type();
                 $type->setName((string) $l['name']);
                 $type->setHandle((string) $l['handle']);
@@ -170,7 +170,7 @@ class MclInstaller
             }
         }
     }
-    
+
 
     protected function importAttributeCategories(\SimpleXMLElement $sx)
     {
@@ -201,7 +201,7 @@ class MclInstaller
 
                 $akID = $db->GetOne( "SELECT ak.akID FROM AttributeKeys ak INNER JOIN AttributeKeyCategories akc ON ak.akCategoryID = akc.akCategoryID  WHERE ak.akHandle = ? AND akc.akCategoryHandle = ?", array($ak['handle'],  $akc->getAttributeKeyCategoryHandle()));
                 // $test = $c1::getByHandle($ak['handle']);
-                if(!$akID) 
+                if(!$akID)
                     call_user_func(array($c1, 'import'), $ak);
                     // ISSUE : This create tha attribute but this one is not loadable for now, i think from a cache issue.
                     // It is imossible to retrieve the attribute
@@ -237,7 +237,7 @@ class MclInstaller
                             $do = $db->GetOne('select max(displayOrder) from AttributeSetKeys where asID = ?', array($set->getAttributeSetID()));
                             $do++;
                             $db->Execute('insert into AttributeSetKeys (asID, akID, displayOrder) values (?, ?, ?)', array($set->getAttributeSetID(), $akID, $do));
-                        }                   
+                        }
                     } else {
                         $ak = $akc->getAttributeKeyByHandle((string)$ask['handle']);
                         if (is_object($ak)) {
