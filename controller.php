@@ -11,12 +11,13 @@ use FileAttributeKey as FileKey;
 use Package;
 use Route;
 
+use Concrete\Package\ThemeAnitya\Helper\MclInstaller;
+
 class Controller extends Package {
 
     protected $pkgHandle = 'easy_image_slider';
     protected $appVersionRequired = '5.7.3';
-    protected $pkgVersion = '0.2.3';
-    protected $btDefaultSet = 'multimedia';
+    protected $pkgVersion = '1.0';
     protected $pkg;
     
     public function getPackageDescription() {
@@ -63,9 +64,6 @@ class Controller extends Package {
     // Get the package object
         $this->pkg = parent::install();
 
-    // Install Block
-        BlockType::installBlockType('easy_image_slider', $this->pkg);        
-
     // Installing                   
         $this->installOrUpgrade();
 
@@ -73,11 +71,10 @@ class Controller extends Package {
 
 
     private function installOrUpgrade() {
+        $ci = new MclInstaller($this->pkg);
+        $ci->importContentFile($this->getPackagePath() . '/config/install/base/blocktypes.xml');        
+        $ci->importContentFile($this->getPackagePath() . '/config/install/base/attributes.xml');    
 
-        $this->getOrInstallFileAttributeText('image_link', t('Image Link'));
-        $this->getOrInstallFileAttributeText('image_link_text', t('Image Link Text'));
-        $this->getOrInstallFileAttributeText('image_thumbnail_width', t('Thumbnail Width'));
-        $this->getOrInstallFileAttributeText('image_bg_color', t('Thumbnail Background Color'));
     }    
 
     public function upgrade () {
@@ -86,14 +83,5 @@ class Controller extends Package {
         parent::upgrade();        
     }
 
-    private function getOrInstallFileAttributeText ($akHandle, $akName, $asID = false, $akIsSearchable = false) {
-        $textType = AttributeType::getByHandle('text');
-
-        $att=FileKey::getByHandle($akHandle); 
-        if( !is_object($att) ) {
-            FileKey::add($textType, array('akHandle' => $akHandle, 'akName' => $akName,'asID' => $asID, 'akIsSearchable' => $akIsSearchable), $this->pkg);
-        }        
-
-    } 
 
 }

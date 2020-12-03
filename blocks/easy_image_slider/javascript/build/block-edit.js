@@ -1,4 +1,4 @@
-   debug = true;
+   debug = false;
 
    var easy_slide_manager = function  (sliderEntriesContainer) {
 
