@@ -10,6 +10,7 @@ use Concrete\Core\File\Set\SetList as FileSetList;
 use Concrete\Core\Support\Facade\Application;
 use EasyImageSlider\Options;
 use EasyImageSlider\Tools;
+use EasyImageSlider\UI;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
@@ -317,6 +318,7 @@ EOT
         $this->set('options', $this->getOptions());
         $this->set('token', $app->make('token'));
         $this->set('urlManager', $app->make('url/manager'));
+        $this->set('ui', UI::getInstance());
     }
 
     private function setAssetEdit()

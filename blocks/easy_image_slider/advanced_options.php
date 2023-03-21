@@ -19,7 +19,7 @@ $color = new Color();
         <table class="grouping">
             <tr>
                 <th><?php echo $form->label($view->field('items'), t('Items to show')) ?></th>
-                <th><?php echo $form->label($view->field('margin'), t('margin between items')) ?></th>
+                <th><?php echo $form->label($view->field('margin'), t('Margin between items')) ?></th>
                 <th><?php echo $form->label($view->field('slideSpeed'), t('Slide Speed')) ?></th>
                 <th><?php echo $form->label($view->field('autoPlay'), t('Auto Play')) ?></th>
             </tr>

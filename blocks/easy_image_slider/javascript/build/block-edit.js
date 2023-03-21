@@ -164,7 +164,7 @@ EasySlideManager.prototype = {
                         fID: data.fID
                     },
                     function(file) {
-                        if (file.type === 'Image') {
+                        if (file.type === 'Image' || file.type === my.options.i18n.image) {
                             $.fn.dialog.hideLoader();
                             my.fillSlideTemplate(file, Launcher);
                             // On ajoute un nouvel element vide a coté
@@ -286,7 +286,7 @@ EasySlideManager.prototype = {
         this.sliderEntriesContainer.sortable({handle: '.handle'});
         // On regarde si on desactive ou pas le bouton submit
         // en comptant les carré rempli d'image
-        if(!$('.slide-item.filled').size()) {
+        if(!$('.slide-item.filled').length) {
             this.$easyImageSave.addClass('disabled');
         } else if (this.$easyImageSave.is('.disabled')) {
             this.$easyImageSave.removeClass('disabled');

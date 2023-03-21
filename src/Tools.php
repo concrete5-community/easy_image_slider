@@ -40,7 +40,7 @@ class Tools extends RouteController
         }
         $fp = new Checker($file);
         if (!$fp->canEditFileProperties()) {
-            return $this->buildFailureReponse(t('Accedd Denied.'));
+            return $this->buildFailureReponse(t('Access Denied.'));
         }
         $fv = $file->getVersionToModify();
         $name = (string) $this->request->request->get('name', $this->request->query->get('name'));
