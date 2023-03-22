@@ -123,11 +123,24 @@ $this->inc('advanced_options.php', array('view' => $view, 'options' => $options,
             <% } else { %>
                 <!-- // A empty square -->
                 <div class="add-file-control">
-                    <a href="#" class="upload-file"><i class="<?php echo $ui->faUpload ?>"></i></a><a href="#" class="add-file"><i class="<?php echo $ui->faList ?>"></i></a>
+                    <?php
+                    if ($ui->majorVersion < 9) {
+                        ?>
+                        <a href="#" class="upload-file"><i class="<?php echo $ui->faUpload ?>"></i></a>
+                        <?php
+                    }
+                    ?>
+                    <a href="#" class="add-file"><i class="<?php echo $ui->faList ?>"></i></a>
                 </div>
                 <span class="process"><?php echo t('Processing') ?> <i class="<?php echo $ui->faGear ?> <?php echo $ui->faSpin ?>"></i></span>
                 <input type="text" class="knob" value="0" data-width="150" data-height="150" data-fgColor="#555" data-readOnly="1" data-bgColor="#e1e1e1" data-thickness=".1" />
-                <input type="file" name="files[]" class="browse-file" multiple />
+                <?php
+                if ($ui->majorVersion < 9) {
+                    ?>
+                    <input type="file" name="files[]" class="browse-file" multiple />
+                    <?php
+                }
+                ?>
             <% } %>
         </div>
     </div>

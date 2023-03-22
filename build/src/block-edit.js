@@ -140,8 +140,11 @@ EasySlideManager.prototype = {
     // Quand on clique sur le cadre on déclenche l'ouverture du navigateur de fichier Navigateur
     attachUploadEvent: function($obj) {
         // On lance le fileupload
-        $obj.fileupload(this.fileUploadArgs);
         var $inputfile = $obj.find('input.browse-file');
+        if ($inputfile.length === 0) {
+            return;
+        }
+        $obj.fileupload(this.fileUploadArgs);
         $obj.find('.upload-file').on('click',function(e) {
             e.preventDefault();
             $inputfile.click();
