@@ -100,7 +100,7 @@ class Controller extends Package
     private function registerAssets()
     {
         $al = AssetList::getInstance();
-        $al->register('javascript', 'knob', 'blocks/easy_image_slider/javascript/build/jquery.knob.js', array('version' => '1.2.11', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('javascript', 'knob', 'blocks/easy_image_slider/javascript/build/jquery.knob.js', array('version' => '1.2.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('javascript', 'easy-slider-edit', 'blocks/easy_image_slider/javascript/build/block-edit.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('css', 'easy-slider-edit', 'blocks/easy_image_slider/stylesheet/block-edit.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('css', 'easy-slider-view', 'blocks/easy_image_slider/stylesheet/block-view.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
