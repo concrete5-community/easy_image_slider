@@ -4,6 +4,8 @@ namespace Concrete\Package\EasyImageSlider\Block\EasyImageSlider;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
+use Concrete\Core\Asset\Asset;
+use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Block\BlockController;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\SetList as FileSetList;
@@ -313,16 +315,22 @@ EOT
     private function configureEdit()
     {
         $app = Application::getFacadeApplication();
-        $this->setAssetEdit();
+        $ui = UI::getInstance();
+        $this->setAssetEdit($ui);
         $this->set('fileSets', $this->getFileSetList());
         $this->set('options', $this->getOptions());
         $this->set('token', $app->make('token'));
         $this->set('urlManager', $app->make('url/manager'));
-        $this->set('ui', UI::getInstance());
+        $this->set('ui', $ui);
     }
 
-    private function setAssetEdit()
+    private function setAssetEdit(UI $ui)
     {
+        $assetList = AssetList::getInstance();
+        if (!$assetList->getAsset('javascript', 'bootstrap-editable')) {
+            $assetList->register('javascript', 'bootstrap-editable', 'blocks/easy_image_slider/js/bootstrap-editable.js', array('version' => '1.5.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), 'easy_image_slider');
+        }
+        
         $this->requireAsset('core/file-manager');
         $this->requireAsset('css', 'core/file-manager');
         $this->requireAsset('css', 'jquery/ui');
@@ -335,8 +343,14 @@ EOT
         $this->requireAsset('javascript', 'underscore');
         $this->requireAsset('javascript', 'core/app');
         $this->requireAsset('javascript', 'bootstrap-editable');
-        $this->requireAsset('css', 'core/app/editable-fields');
-
+        if ($ui->majorVersion >= 9) {
+            if (!$assetList->getAsset('css', 'bootstrap-editable')) {
+                $assetList->register('css', 'bootstrap-editable', 'blocks/easy_image_slider/css/bootstrap-editable.css', array('version' => '1.5.3', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => true), 'easy_image_slider');
+            }
+            $this->requireAsset('css', 'bootstrap-editable');
+        } else {
+            $this->requireAsset('css', 'core/app/editable-fields');
+        }
         $this->requireAsset('javascript', 'knob');
         $this->requireAsset('javascript', 'easy-slider-edit');
         $this->requireAsset('css', 'easy-slider-edit');

@@ -277,3 +277,7 @@ z-index: 9999; /* To go up of the tool bar */
 .easy-image-toolbar .btn-mini {
     font-size: 9px !important;
 }
+
+.editable-container.editable-popup {
+    z-index: 1151;
+}

@@ -40,4 +40,7 @@ mix
     .copy('src/owl.carousel/AjaxLoader.gif', BLOCK_DIR + '/css/AjaxLoader.gif')
     .css('src/owl.carousel/owl.transitions.css', 'css/owl.transitions.css')
     .css('src/animate/animate.css', 'css/animate.css')
+    .js('src/x-editable/js/bootstrap-editable.js', 'js/bootstrap-editable.js')
+    .css('src/x-editable/css/bootstrap-editable.css', 'css/bootstrap-editable.css', {processUrls: false})
+    .copy('src/x-editable/img/', BLOCK_DIR + '/img')
 ;
