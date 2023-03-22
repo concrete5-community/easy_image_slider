@@ -12,3 +12,5 @@
   Remove README.md from git-exported archives
 - 1.4.0 (2023-03-22)  
   Add ConcreteCMS v9 compatibility
+- 1.4.1 (2023-03-22)  
+  Update composer.json to declare ConcreteCMS v9 compatibility
