@@ -196,6 +196,7 @@
 .add-file-control {
     position: absolute;
     width: 100px;
+    text-align: center;
     left: 50%;
     top: 50%;
     margin-top: -25px;
@@ -271,4 +272,8 @@
 /* -- ccm-ui -- */
 .ccm-ui .popover.top {
 z-index: 9999; /* To go up of the tool bar */
+}
+
+.easy-image-toolbar .btn-mini {
+    font-size: 9px !important;
 }
