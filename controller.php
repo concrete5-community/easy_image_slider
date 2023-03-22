@@ -113,7 +113,7 @@ class Controller extends Package
 
         // View items
         $al->register('javascript', 'intense', 'blocks/easy_image_slider/javascript/build/intense.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
-        $al->register('javascript', 'prettyPhoto', 'blocks/easy_image_slider/javascript/build/jquery.prettyPhoto.js', array('version' => '3.1.5', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('javascript', 'prettyPhoto', 'blocks/easy_image_slider/javascript/build/jquery.prettyPhoto.js', array('version' => '3.1.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('css', 'prettyPhoto', 'blocks/easy_image_slider/stylesheet/prettyPhoto.css', array('version' => '3.1.5', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
     }
 }
