@@ -108,7 +108,7 @@ class Controller extends Package
         $al->register('css', 'owl-carousel', 'blocks/easy_image_slider/stylesheet/owl.carousel.css', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('css', 'owl-theme', 'blocks/easy_image_slider/stylesheet/owl.theme.css', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('css', 'animate', 'blocks/easy_image_slider/stylesheet/animate.css', array('version' => '1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
-        $al->register('javascript', 'owl-carousel', 'blocks/easy_image_slider/javascript/build/owl.carousel.min.js', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('javascript', 'owl-carousel', 'blocks/easy_image_slider/javascript/build/owl.carousel.js', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
         $al->register('javascript', 'imagesloaded', 'blocks/easy_image_slider/javascript/build/imagesloaded.pkgd.min.js', array('version' => '3.1.4', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
 
         // View items
