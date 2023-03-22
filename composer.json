@@ -30,7 +30,7 @@
         "source": "https://github.com/concrete5-community/easy_image_slider"
     },
     "require": {
-        "concrete5/core": "^5.7.5.2 || ^8",
+        "concrete5/core": "^5.7.5.2 || ^8 || ^9",
         "php": ">=5.3.3"
     },
     "config": {
