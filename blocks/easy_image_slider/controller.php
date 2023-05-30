@@ -172,6 +172,15 @@ EOT
     /**
      * {@inheritdoc}
      *
+     * @see \Concrete\Core\Block\BlockController::outputAutoHeaderItems()
+     */
+    public function outputAutoHeaderItems()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @see \Concrete\Core\Block\BlockController::registerViewAssets()
      */
     public function registerViewAssets($outputContent = '')
@@ -326,11 +335,6 @@ EOT
 
     private function setAssetEdit(UI $ui)
     {
-        $assetList = AssetList::getInstance();
-        if (!$assetList->getAsset('javascript', 'bootstrap-editable')) {
-            $assetList->register('javascript', 'bootstrap-editable', 'blocks/easy_image_slider/js/bootstrap-editable.js', array('version' => '1.5.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), 'easy_image_slider');
-        }
-        
         $this->requireAsset('core/file-manager');
         $this->requireAsset('css', 'core/file-manager');
         $this->requireAsset('css', 'jquery/ui');
@@ -342,8 +346,12 @@ EOT
         $this->requireAsset('javascript', 'core/events');
         $this->requireAsset('javascript', 'underscore');
         $this->requireAsset('javascript', 'core/app');
-        $this->requireAsset('javascript', 'bootstrap-editable');
         if ($ui->majorVersion >= 9) {
+            $assetList = AssetList::getInstance();
+            if (!$assetList->getAsset('javascript', 'bootstrap-editable')) {
+                $assetList->register('javascript', 'bootstrap-editable', 'blocks/easy_image_slider/js/bootstrap-editable.js', array('version' => '1.5.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), 'easy_image_slider');
+            }
+            $this->requireAsset('javascript', 'bootstrap-editable');
             if (!$assetList->getAsset('css', 'bootstrap-editable')) {
                 $assetList->register('css', 'bootstrap-editable', 'blocks/easy_image_slider/css/bootstrap-editable.css', array('version' => '1.5.3', 'position' => Asset::ASSET_POSITION_HEADER, 'minify' => false, 'combine' => true), 'easy_image_slider');
             }
