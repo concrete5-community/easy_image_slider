@@ -357,7 +357,7 @@ EOT
             }
             $this->requireAsset('css', 'bootstrap-editable');
         } else {
-            $this->requireAsset('css', 'core/app/editable-fields');
+            $this->requireAsset('core/app/editable-fields');
         }
         $this->requireAsset('javascript', 'knob');
         $this->requireAsset('javascript', 'easy-slider-edit');
