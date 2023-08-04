@@ -16,4 +16,5 @@
   Update composer.json to declare ConcreteCMS v9 compatibility
 - 1.4.2 (2023-05-30)  
   Fix support for concrete5 8
-
+- 1.4.3 (2023-08-04)  
+  Fix support for concrete5 8
