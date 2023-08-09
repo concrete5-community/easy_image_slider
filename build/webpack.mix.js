@@ -1,6 +1,7 @@
+const path = require('path');
 const mix = require('laravel-mix');
 
-const BLOCK_DIR = '../blocks/easy_image_slider';
+const PACKAGE_DIR = path.dirname(__dirname);
 
 mix
     .disableNotifications()
@@ -21,7 +22,7 @@ mix
         },
     })
 ;
-mix.setPublicPath(BLOCK_DIR);
+mix.setPublicPath(PACKAGE_DIR);
 
 mix
     .js('src/block-edit.js', 'js/block-edit.js')
@@ -32,15 +33,15 @@ mix
     .js('src/jquery.knob.js', 'js/jquery.knob.js')
     .js('src/jquery.prettyPhoto/jquery.prettyPhoto.js', 'js/jquery.prettyPhoto.js')
     .css('src/jquery.prettyPhoto/prettyPhoto.css', 'css/prettyPhoto.css', {processUrls: false})
-    .copy('src/images/prettyPhoto/', BLOCK_DIR + '/images/prettyPhoto')
+    .copy('src/images/prettyPhoto/', PACKAGE_DIR + '/images/prettyPhoto')
     .js('src/owl.carousel/owl.carousel.js', 'js/owl.carousel.js')
     .css('src/owl.carousel/owl.carousel.css', 'css/owl.carousel.css', {processUrls: false})
-    .copy('src/owl.carousel/grabbing.png', BLOCK_DIR + '/css/grabbing.png')
+    .copy('src/owl.carousel/grabbing.png', PACKAGE_DIR + '/css/grabbing.png')
     .css('src/owl.carousel/owl.theme.css', 'css/owl.theme.css', {processUrls: false})
-    .copy('src/owl.carousel/AjaxLoader.gif', BLOCK_DIR + '/css/AjaxLoader.gif')
+    .copy('src/owl.carousel/AjaxLoader.gif', PACKAGE_DIR + '/css/AjaxLoader.gif')
     .css('src/owl.carousel/owl.transitions.css', 'css/owl.transitions.css')
     .css('src/animate/animate.css', 'css/animate.css')
     .js('src/x-editable/js/bootstrap-editable.js', 'js/bootstrap-editable.js')
     .css('src/x-editable/css/bootstrap-editable.css', 'css/bootstrap-editable.css', {processUrls: false})
-    .copy('src/x-editable/img/', BLOCK_DIR + '/img')
+    .copy('src/x-editable/img/', PACKAGE_DIR + '/img')
 ;

@@ -100,20 +100,20 @@ class Controller extends Package
     private function registerAssets()
     {
         $al = AssetList::getInstance();
-        $al->register('javascript', 'knob', 'blocks/easy_image_slider/js/jquery.knob.js', array('version' => '1.2.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
-        $al->register('javascript', 'easy-slider-edit', 'blocks/easy_image_slider/js/block-edit.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
-        $al->register('css', 'easy-slider-edit', 'blocks/easy_image_slider/css/block-edit.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
-        $al->register('css', 'easy-slider-view', 'blocks/easy_image_slider/css/block-view.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('javascript', 'knob', 'js/jquery.knob.js', array('version' => '1.2.12', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('javascript', 'easy-slider-edit', 'js/block-edit.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('css', 'easy-slider-edit', 'css/block-edit.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('css', 'easy-slider-view', 'css/block-view.css', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
 
-        $al->register('css', 'owl-carousel', 'blocks/easy_image_slider/css/owl.carousel.css', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
-        $al->register('css', 'owl-theme', 'blocks/easy_image_slider/css/owl.theme.css', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
-        $al->register('css', 'animate', 'blocks/easy_image_slider/css/animate.css', array('version' => '1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
-        $al->register('javascript', 'owl-carousel', 'blocks/easy_image_slider/js/owl.carousel.js', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
-        $al->register('javascript', 'imagesloaded', 'blocks/easy_image_slider/js/imagesloaded.js', array('version' => '5.0.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('css', 'owl-carousel', 'css/owl.carousel.css', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('css', 'owl-theme', 'css/owl.theme.css', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('css', 'animate', 'css/animate.css', array('version' => '1.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('javascript', 'owl-carousel', 'js/owl.carousel.js', array('version' => '1.3.3', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('javascript', 'imagesloaded', 'js/imagesloaded.js', array('version' => '5.0.0', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
 
         // View items
-        $al->register('javascript', 'intense', 'blocks/easy_image_slider/js/intense.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
-        $al->register('javascript', 'prettyPhoto', 'blocks/easy_image_slider/js/jquery.prettyPhoto.js', array('version' => '3.1.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
-        $al->register('css', 'prettyPhoto', 'blocks/easy_image_slider/css/prettyPhoto.css', array('version' => '3.1.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
+        $al->register('javascript', 'intense', 'js/intense.js', array('version' => '1', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('javascript', 'prettyPhoto', 'js/jquery.prettyPhoto.js', array('version' => '3.1.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => false, 'combine' => true), $this);
+        $al->register('css', 'prettyPhoto', 'css/prettyPhoto.css', array('version' => '3.1.6', 'position' => Asset::ASSET_POSITION_FOOTER, 'minify' => true, 'combine' => true), $this);
     }
 }
