@@ -246,7 +246,13 @@ EOT
                 continue;
             }
             $w = $f->getAttribute('width');
+            if (!$w) {
+                continue;
+            }
             $h = $f->getAttribute('height');
+            if (!$h) {
+                continue;
+            }
             $placeholderFile = $placeholderDir . "/placeholder-{$w}-{$h}.png";
             if (file_exists($placeholderFile)) {
                 continue;
