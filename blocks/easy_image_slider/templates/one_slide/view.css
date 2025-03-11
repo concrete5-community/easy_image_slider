@@ -1,4 +1,12 @@
 .easy-slider-one {
+    display: block;
+}
+
+.easy-slider-one .owl-item {
+    display: inline-block;
+}
+
+.easy-slider-one {
     transition-property: background-color;
     /* timing is set by php in view.php with the slideSpeed option */
 }

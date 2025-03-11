@@ -1,10 +1,13 @@
 .easy-slider-carousel {
+    display: block;
     transition-property: background-color, opacity;
     /* timing is set by php in view.php with the slideSpeed option */
 }
 
 /* -- Items -- */
-
+.easy-slider-carousel .owl-item {
+    display: inline-block;
+}
 .easy-slider-carousel .owl-item .item 
  {
     position: relative;
