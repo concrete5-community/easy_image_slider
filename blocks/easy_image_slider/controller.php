@@ -6,18 +6,27 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
+use Concrete\Core\Backup\ContentExporter;
+use Concrete\Core\Backup\ContentImporter\ValueInspector\Item\FileItem;
 use Concrete\Core\Block\BlockController;
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Set\SetList as FileSetList;
+use Concrete\Core\File\Tracker\FileTrackableInterface;
+use Concrete\Core\Page\Page;
 use Concrete\Core\Support\Facade\Application;
+use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
+use Concrete\Core\Utility\Service\Xml;
+use EasyImageSlider\FileDetails;
 use EasyImageSlider\Options;
 use EasyImageSlider\Tools;
 use EasyImageSlider\UI;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
+use SimpleXMLElement;
 
-class Controller extends BlockController
+class Controller extends BlockController implements FileTrackableInterface
 {
     /**
      * {@inheritdoc}
@@ -53,13 +62,6 @@ class Controller extends BlockController
      * @see \Concrete\Core\Block\BlockController::$btCacheBlockRecord
      */
     protected $btCacheBlockRecord = false;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @see \Concrete\Core\Block\BlockController::$btExportFileColumns
-     */
-    protected $btExportFileColumns = array('fID');
 
     /**
      * {@inheritdoc}
@@ -212,10 +214,244 @@ EOT
         if ($fIDs !== '') {
             $this->generatePlaceHolderFromArray($args['fID']);
         }
-        parent::save(array(
-            'options' => json_encode(Options::fromUI($args)),
+        unset($args['fID']);
+        $options = isset($args['options']) && $args['options'] instanceof Options ? $args['options'] : Options::fromUI($args);
+        parent::save([
+            'options' => json_encode($options),
             'fIDs' => $fIDs,
-        ));
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedFiles()
+    {
+        $files = $this->getFiles();
+        $result = [];
+        foreach ($files as $file) {
+            $result[$file->getFileID()] = $file;
+        }
+        $inspector = $this->app->make('import/value_inspector');
+        foreach ($files as $file) {
+            $imageLink = $this->formatLinkForExport((string) $file->getAttribute('image_link'));
+            foreach ($inspector->inspect($imageLink)->getMatchedItems() as $item) {
+                if (!$item instanceof FileItem) {
+                    continue;
+                }
+                $file = $item->getContentObject();
+                if (!$file || $file->isError()) {
+                    continue;
+                }
+                $result[$file->getFileID()] = $file;
+                
+            }
+        }
+
+        return array_values($result);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\File\Tracker\FileTrackableInterface::getUsedFiles()
+     */
+    public function getUsedCollection()
+    {
+        return $this->getCollectionObject();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::export()
+     */
+    public function export(SimpleXMLElement $blockNode)
+    {
+        $xml = $this->app->make(Xml::class);
+        $data = $blockNode->addChild('data');
+        $data->addAttribute('table', $this->getBlockTypeDatabaseTable());
+        $record = $data->addChild('record');
+        $files = $this->getFilesDetails($this->getFilesIds());
+        $exportedFiles = array_map(
+            static function (FileDetails $details) {
+                return ContentExporter::replaceFileWithPlaceHolder($details->fID);
+            },
+            $files
+        );
+        $options = $this->getOptions()->export();
+        if (method_exists($xml, 'createChildElement')) {
+            foreach ($exportedFiles as $index => $exportedFile) {
+                $xFile = $xml->createChildElement($record, 'file', $exportedFile);
+                $this->exportFileDetails($xFile, $files[$index]);
+            }
+            $xml->createChildElement($record, 'options', $options);
+        } else {
+            foreach ($exportedFiles as $index => $exportedFile) {
+                $xFile = $xml->createCDataNode($record, 'file', $exportedFile);
+                $this->exportFileDetails($xFile, $files[$index]);
+            }
+            $xml->createCDataNode($record, 'options', $options);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::getImportData()
+     */
+    protected function getImportData($blockNode, $page)
+    {
+        $args = [];
+        if (!isset($blockNode->data)) {
+            return $args;
+        }
+        $inspector = $this->app->make('import/value_inspector');
+        foreach ($blockNode->data as $xData) {
+            if (!isset($xData['table']) || $this->getBlockTypeDatabaseTable() !== (string) $xData['table']) {
+                continue;
+            }
+            if (!isset($xData->record)) {
+                continue;
+            }
+            $xRecord = $xData->record;
+            $fIDs = [];
+            if (isset($xRecord->file)) {
+                foreach ($xRecord->file as $xFile) {
+                    foreach ($inspector->inspect((string) $xFile)->getMatchedItems() as $item) {
+                        if (!$item instanceof FileItem) {
+                            continue;
+                        }
+                        $file = $item->getContentObject();
+                        if (!$file || $file->isError()) {
+                            continue;
+                        }
+                        $this->importFileDetails($xFile, $file);
+                        $fIDs[] = $file->getFileID();
+                    }
+                }
+            }
+            $args['fID'] = $fIDs;
+            if (isset($xRecord->options)) {
+                $args['options'] = Options::import((string) $xRecord->options);
+            }
+        }
+
+        return $args;
+    }
+
+    /**
+     * @param \Concrete\Core\File\File|\Concrete\Core\Entity\File\File $file
+     */
+    private function importFileDetails(SimpleXmlElement $xFile, $file)
+    {
+        $title = isset($xFile['title']) ? (string) $xFile['title'] : '';
+        if ($title !== '' && $title !== $file->getTitle()) {
+            $file->updateTitle($title);
+        }
+        $description = isset($xFile['description']) ? (string) $xFile['description'] : '';
+        if ($description !== '' && $description !== $file->getDescription()) {
+            $file->updateDescription($description);
+        }
+        $rawImageLink = isset($xFile['image_link']) ? (string) $xFile['image_link'] : '';
+        if ($rawImageLink !== '') {
+            $imageLink = LinkAbstractor::import($rawImageLink);
+            if ($imageLink !== (string) $file->getAttribute('image_link')) {
+                $file->setAttribute('image_link', $imageLink);
+            }
+        }
+        $imageLinkText = isset($xFile['image_link_text']) ? (string) $xFile['image_link_text'] : '';
+        if ($imageLinkText !== '' && $imageLinkText !== (string) $file->getAttribute('image_link_text')) {
+            $file->setAttribute('image_link_text', $imageLinkText);
+        }
+        $imageBgColor = isset($xFile['image_bg_color']) ? (string) $xFile['image_bg_color'] : '';
+        if ($imageBgColor !== '' && $imageBgColor !== (string) $file->getAttribute('image_bg_color')) {
+            $file->setAttribute('image_bg_color', $imageBgColor);
+        }
+    }
+
+    private function exportFileDetails(SimpleXmlElement $xFile, FileDetails $details)
+    {
+        if ((string) $details->title !== '') {
+            $xFile['title'] = $details->title;
+        }
+        if ((string) $details->description !== '') {
+            $xFile['description'] = $details->description;
+        }
+        if (($imageLink = $this->formatLinkForExport((string) $details->image_link)) !== '') {
+            $xFile['image_link'] = $imageLink;
+        }
+        if ((string) $details->image_link_text !== '') {
+            $xFile['image_link_text'] = $details->image_link_text;
+        }
+        if ((string) $details->image_bg_color !== '') {
+            $xFile['image_bg_color'] = $details->image_bg_color;
+        }
+    }
+
+    /**
+     * @param string $str
+     *
+     * @return string
+     */
+    private function formatLinkForExport($str)
+    {
+        if ($str === '') {
+            return '';
+        }
+        $resolver = $this->app->make(ResolverManagerInterface::class);
+        if (filter_var($str, FILTER_VALIDATE_URL)) {
+            $url = $str;
+        } elseif ($str[0] === '/') {
+            $str = preg_replace('{^/index\.php/?\b}', '/', $str);
+            try {
+                $str = (string) $resolver->resolve([$str]);
+            } catch (\Exception $x) {
+                return $str;
+            } catch (\Throwable $x) {
+                return $str;
+            }
+            if (!filter_var($str, FILTER_VALIDATE_URL)) {
+                return $str;
+            }
+            $url = $str;
+        } else {
+            return $str;
+        }
+        $homeUrl = '';
+        try {
+            $homeUrl = (string) $resolver->resolve(['/']);
+        } catch (\Exception $x) {
+        } catch (\Throwable $x) {
+        }
+        $homeUrl = preg_replace('{/index\.php$}i', '/', $homeUrl);
+        if ($homeUrl === '' || !filter_var($str, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+        $homeUrl = rtrim($homeUrl, '/');
+        if ($homeUrl === '' || stripos($url, $homeUrl) !== 0) {
+            return $url;
+        }
+        $path = preg_replace('{[\?#].*$}', '', substr($url, strlen($homeUrl)));
+        if ($path === '' || $path[0] !== '/') {
+            $path = '/' . $path;
+        }
+        $path = preg_replace('{^\/index\.php\b\/?}', '/', $path);
+        $page = $path === '/' ? Page::getHomePageID(): Page::getByPath($path);
+        if ($page && !$page->isError()) {
+            return ContentExporter::replacePageWithPlaceHolder($page->getCollectionID());
+        }
+        $match = null;
+        if (preg_match('{^/download_file(/view|/force|/view_inline)/?(?<fid>[^/\?#]+)}', $path, $match)) {
+            $file = method_exists('File', 'getByUUIDOrID') ? File::getByUUIDOrID($match['fid']) : File::getByID($match['fid']);
+            if ($file && !$file->isError()) {
+                return ContentExporter::replaceFileWithPlaceHolder($file->getFileID());
+            }
+        }
+
+        return $url;
     }
 
     /**

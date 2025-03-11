@@ -1,5 +1,6 @@
 <?php
 
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
 use Concrete\Core\Page\Page;
 
@@ -41,7 +42,7 @@ if ($c->isEditMode()) {
                 // Full image infos
                 $fullUrl = $f->getRelativePath();
                 // Images Links, title and description
-                $linkUrl = $f->getAttribute('image_link');
+                $linkUrl = LinkAbstractor::translateFrom((string) $f->getAttribute('image_link'));
                 $linkUrlText = $f->getAttribute('image_link_text');
                 $displayInfos = $options->ItemsTitle || $options->ItemsDescription || $linkUrl && $linkUrlText;
                 ?>

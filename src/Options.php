@@ -4,7 +4,8 @@ namespace EasyImageSlider;
 
 defined('C5_EXECUTE') or die('Access Denied.');
 
-class Options
+#[\AllowDynamicProperties]
+class Options 
 {
     /**
      * Allowed values: '', 'lightbox', 'intense'.
@@ -216,6 +217,25 @@ class Options
     public function isSingleItemSlide()
     {
         return $this->items === 1;
+    }
+
+    /**
+     * 
+     * @param string|mixed $string
+     *
+     * @return array
+     */
+    public static function import($string)
+    {
+        return static::fromJSON($string);
+    }
+
+    /**
+     * @return string
+     */
+    public function export()
+    {
+        return json_encode(get_object_vars($this));
     }
 
     /**
