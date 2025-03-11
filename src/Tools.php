@@ -3,6 +3,7 @@
 namespace EasyImageSlider;
 
 use Concrete\Core\Controller\Controller as RouteController;
+use Concrete\Core\Editor\LinkAbstractor;
 use Concrete\Core\File\EditResponse;
 use Concrete\Core\File\File;
 use Concrete\Core\File\Image\Thumbnail\Type\Type;
@@ -120,7 +121,7 @@ class Tools extends RouteController
         $o->type = (string) $file->getVersionToModify()->getGenericTypeText();
         $w = (int) $file->getAttribute('image_thumbnail_width');
         $o->image_thumbnail_width = $w > 0 ? $w : null;
-        $o->image_link = (string) $file->getAttribute('image_link');
+        $o->image_link = LinkAbstractor::translateFrom((string) $file->getAttribute('image_link'));
         $o->image_link_text = (string) $file->getAttribute('image_link_text');
         $o->image_bg_color = (string) $file->getAttribute('image_bg_color');
 

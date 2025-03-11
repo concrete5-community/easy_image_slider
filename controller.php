@@ -19,7 +19,7 @@ class Controller extends Package
      *
      * @see \Concrete\Core\Package\Package::$appVersionRequired
      */
-    protected $appVersionRequired = '5.7.5.2';
+    protected $appVersionRequired = '8.5.2';
 
     protected $pkgVersion = '1.4.5';
 
