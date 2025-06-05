@@ -29,5 +29,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           remove-files: |
-            blocks/easy_image_slider/images/placeholders/.gitignore
             composer.json
