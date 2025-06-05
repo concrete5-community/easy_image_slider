@@ -1,3 +1,5 @@
+[![Tests](https://github.com/concrete5-community/easy_image_slider/actions/workflows/tests.yml/badge.svg)](https://github.com/concrete5-community/easy_image_slider/actions/workflows/tests.yml)
+
 # Easy Image Slider
 
 ## Credits
