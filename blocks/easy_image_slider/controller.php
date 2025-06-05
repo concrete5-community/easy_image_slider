@@ -14,6 +14,7 @@ use Concrete\Core\File\File;
 use Concrete\Core\File\Set\SetList as FileSetList;
 use Concrete\Core\File\Tracker\FileTrackableInterface;
 use Concrete\Core\Page\Page;
+use Concrete\Core\Statistics\UsageTracker\AggregateTracker;
 use Concrete\Core\Support\Facade\Application;
 use Concrete\Core\Url\Resolver\Manager\ResolverManagerInterface;
 use Concrete\Core\Utility\Service\Xml;
@@ -101,6 +102,11 @@ class Controller extends BlockController implements FileTrackableInterface
      * @see \Concrete\Core\Block\BlockController::$btDefaultSet
      */
     protected $btDefaultSet = 'multimedia';
+
+    /**
+     * @var \Concrete\Core\Statistics\UsageTracker\AggregateTracker|null
+     */
+    protected $tracker;
 
     /**
      * @var string|null
@@ -208,10 +214,27 @@ EOT
         $fIDs = empty($args['fID']) || !is_array($args['fID']) ? '' : implode(',', $args['fID']);
         unset($args['fID']);
         $options = isset($args['options']) && $args['options'] instanceof Options ? $args['options'] : Options::fromUI($args);
+        $this->fIDs = $fIDs;
         parent::save([
             'options' => json_encode($options),
             'fIDs' => $fIDs,
         ]);
+        if (version_compare(APP_VERSION, '9.0.2') < 0) {
+            $this->getTracker()->track($this);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Block\BlockController::delete()
+     */
+    public function delete()
+    {
+        if (version_compare(APP_VERSION, '9.0.2') < 0) {
+            $this->getTracker()->forget($this);
+        }
+        parent::delete();
     }
 
     /**
@@ -238,7 +261,6 @@ EOT
                     continue;
                 }
                 $result[$file->getFileID()] = $file;
-                
             }
         }
 
@@ -312,7 +334,7 @@ EOT
 </svg>
 EOT
         ;
-        
+
         return 'data:image/svg+xml;utf8,' . rawurlencode(preg_replace('/[\r\n]/', '', $svg));
     }
 
@@ -359,6 +381,18 @@ EOT
         }
 
         return $args;
+    }
+
+    /**
+     * @return \Concrete\Core\Statistics\UsageTracker\AggregateTracker
+     */
+    protected function getTracker()
+    {
+        if ($this->tracker === null) {
+            $this->tracker = $this->app->make(AggregateTracker::class);
+        }
+
+        return $this->tracker;
     }
 
     /**
