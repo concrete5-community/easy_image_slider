@@ -21,9 +21,6 @@ use EasyImageSlider\FileDetails;
 use EasyImageSlider\Options;
 use EasyImageSlider\Tools;
 use EasyImageSlider\UI;
-use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
-use Imagine\Image\Palette\RGB;
 use SimpleXMLElement;
 
 class Controller extends BlockController implements FileTrackableInterface
@@ -199,10 +196,8 @@ EOT
 
     public function view()
     {
-        $files = $this->getFiles();
-        $this->set('files', $files);
+        $this->set('files', $this->getFiles());
         $this->set('options', $this->getOptions());
-        $this->generatePlaceHolderFromArray($files);
     }
 
     public function save($args)
@@ -211,9 +206,6 @@ EOT
             $args = array();
         }
         $fIDs = empty($args['fID']) || !is_array($args['fID']) ? '' : implode(',', $args['fID']);
-        if ($fIDs !== '') {
-            $this->generatePlaceHolderFromArray($args['fID']);
-        }
         unset($args['fID']);
         $options = isset($args['options']) && $args['options'] instanceof Options ? $args['options'] : Options::fromUI($args);
         parent::save([
@@ -298,6 +290,33 @@ EOT
     }
 
     /**
+     * @param \Concrete\Core\Entity\File\File $file
+     *
+     * @return string
+     */
+    public function getPlaceholderUrl($file)
+    {
+        $fileVersion = $file->getApprovedVersion();
+        $placeholderMaxSize = 600;
+        $fileWidth = $fileVersion ? (int) $fileVersion->getAttribute('width') : 0;
+        $fileHeight = $fileVersion ? (int) $fileVersion->getAttribute('height') : 0;
+        $placeholderWidth = $placeholderMaxSize;
+        if ($fileWidth < 1 || $fileHeight < 1) {
+            $placeholderHeight = $placeholderWidth;
+        } else {
+            $placeholderHeight = floor($fileHeight * $placeholderMaxSize / $fileWidth);
+        }
+        $svg = <<<EOT
+<svg xmlns="http://www.w3.org/2000/svg" width="{$placeholderWidth}" height="{$placeholderHeight}">
+  <rect width="{$placeholderWidth}" height="{$placeholderHeight}" fill="black" fill-opacity="0.13" />
+</svg>
+EOT
+        ;
+        
+        return 'data:image/svg+xml;utf8,' . rawurlencode(preg_replace('/[\r\n]/', '', $svg));
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \Concrete\Core\Block\BlockController::getImportData()
@@ -343,7 +362,7 @@ EOT
     }
 
     /**
-     * @param \Concrete\Core\File\File|\Concrete\Core\Entity\File\File $file
+     * @param \Concrete\Core\Entity\File\File $file
      */
     private function importFileDetails(SimpleXmlElement $xFile, $file)
     {
@@ -455,52 +474,6 @@ EOT
     }
 
     /**
-     * @param int[]|\Concrete\Core\File\File[] $array
-     */
-    private function generatePlaceHolderFromArray($array)
-    {
-        $placeholderMaxSize = 600;
-        if (empty($array)) {
-            $files = array();
-        } elseif (!is_object($array[0])) {
-            $files = array_values(array_filter(array_map(array($this, 'getFileFromFileID'), $array)));
-        } else {
-            $files = $array;
-        }
-        if ($files === array()) {
-            return;
-        }
-        $placeholderDir = __DIR__ . '/images/placeholders';
-        if (!is_dir($placeholderDir)) {
-            mkdir($placeholderDir, 0755);
-        }
-        $imagine = new Imagine();
-        $rgb = new RGB();
-        $backgroundColor = $rgb->color(array(0x00, 0x00, 0x00), 13);
-        foreach ($files as $f) {
-            if (!is_object($f)) {
-                continue;
-            }
-            $w = $f->getAttribute('width');
-            if (!$w) {
-                continue;
-            }
-            $h = $f->getAttribute('height');
-            if (!$h) {
-                continue;
-            }
-            $placeholderFile = $placeholderDir . "/placeholder-{$w}-{$h}.png";
-            if (file_exists($placeholderFile)) {
-                continue;
-            }
-            $new_width = $placeholderMaxSize;
-            $new_height = floor($h * ($placeholderMaxSize / $w));
-            $image = $imagine->create(new Box($new_width, $new_height), $backgroundColor);
-            $image->save($placeholderFile, array('format' => 'PNG'));
-        }
-    }
-
-    /**
      * @return \Concrete\Core\File\Set\Set[]
      */
     private function getFileSetList()
@@ -547,7 +520,7 @@ EOT
     /**
      * @param int|mixed $fID
      *
-     * @return \Concrete\Core\File\File|null
+     * @return \Concrete\Core\Entity\File\File|null
      */
     private function getFileFromFileID($fID)
     {
@@ -610,7 +583,7 @@ EOT
     }
 
     /**
-     * @return \Concrete\Core\File\File[]
+     * @return \Concrete\Core\Entity\File\File[]
      */
     private function getFiles()
     {

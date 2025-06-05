@@ -8,6 +8,7 @@ defined('C5_EXECUTE') or die('Access Denied.');
 
 /**
  * @var Concrete\Core\Block\View\BlockView|Concrete\Core\Page\Type\Composer\Control\BlockControl $this
+ * @var Concrete\Package\EasyImageSlider\Block\EasyImageSlider\Controller $controller
  * @var int|string $bID
  * @var Concrete\Core\File\File[] $files
  * @var EasyImageSlider\Options $options
@@ -36,7 +37,7 @@ $firstWrapperBg = $options->isTransparent ? ($firstFile->getAttribute('image_bg_
             // Different Thumbnails sizes
             $thumbnailUrl = $options->isSingleItemSlide() ? $f->getRelativePath() : $f->getThumbnailURL($type->getBaseVersion());
             // Due to a bug in OWL2 Lazy work only with loop activated.
-            $placeHolderUrl = $options->lazy ? ($this->getBlockURL() . "/images/placeholders/placeholder-{$f->getAttribute('width')}-{$f->getAttribute('height')}.png") : $thumbnailUrl;
+            $placeHolderUrl = $options->lazy ? $controller->getPlaceholderUrl($f) : $thumbnailUrl;
             $retinaThumbnailUrl = $options->isSingleItemSlide() ? $f->getRelativePath() : $f->getThumbnailURL($type->getDoubledVersion());
             // Styles for color on hover
             $thumbnailBackground = $options->isTransparent ? 'background-color:transparent' : ('background-color:' . ($f->getAttribute('image_bg_color') ? $f->getAttribute('image_bg_color') : $options->fadingColor) . ';');
