@@ -7,10 +7,11 @@ defined('C5_EXECUTE') or die('Access Denied.');
 use Concrete\Core\Asset\Asset;
 use Concrete\Core\Asset\AssetList;
 use Concrete\Core\Backup\ContentImporter;
+use Concrete\Core\Database\EntityManager\Provider\ProviderInterface;
 use Concrete\Core\Package\Package;
 use Route;
 
-class Controller extends Package
+class Controller extends Package implements ProviderInterface
 {
     protected $pkgHandle = 'easy_image_slider';
 
@@ -78,6 +79,16 @@ class Controller extends Package
     {
         $this->installOrUpgrade();
         parent::upgrade();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Concrete\Core\Database\EntityManager\Provider\ProviderInterface::getDrivers()
+     */
+    public function getDrivers()
+    {
+        return [];
     }
 
     private function installOrUpgrade()
